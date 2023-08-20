@@ -9,7 +9,6 @@ import {
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  @Column({ unique: true, nullable: false, name: 'user_id' })
   id: number;
 
   @Column({ nullable: true, unique: true })
@@ -21,10 +20,10 @@ export class User {
   @Column({ nullable: true, unique: true })
   email: string;
 
-  @Column({ nullable: false })
+  @Column({ nullable: true })
   firstName: string;
 
-  @Column({ nullable: false })
+  @Column({ nullable: true })
   lastName: string;
 
   @CreateDateColumn({ nullable: false })

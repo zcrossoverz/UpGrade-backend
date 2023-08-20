@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { EnvironmentConfigService } from '../environment-config/environment-config.service';
 import { TypeOrmModuleOptions, TypeOrmModule } from '@nestjs/typeorm';
+import { EnvironmentConfigModule } from '../environment-config/environment-config.module';
 
 export const getTypeOrmModuleOptions = (
   config: EnvironmentConfigService,
@@ -12,19 +13,19 @@ export const getTypeOrmModuleOptions = (
   password: config.getDatabasePassword(),
   database: config.getDatabaseName(),
   entities: [__dirname + './../../**/*.entity{.ts,.js}'],
-  synchronize: config.getDatabaseSync(),
+  synchronize: true,
   schema: config.getDatabaseSchema(),
-  ssl: {
-    rejectUnauthorized: false,
-  },
+  // ssl: {
+  //   rejectUnauthorized: false,
+  // },
 });
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
-      useFactory: getTypeOrmModuleOptions,
+      imports: [EnvironmentConfigModule],
       inject: [EnvironmentConfigService],
-      imports: [EnvironmentConfigService],
+      useFactory: getTypeOrmModuleOptions,
     }),
   ],
 })
