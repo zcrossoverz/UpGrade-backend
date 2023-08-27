@@ -1,20 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Inject,
-  ParseIntPipe,
-  Post,
-  Put,
-  Query,
-} from '@nestjs/common';
-import {
-  ApiExtraModels,
-  ApiOkResponse,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { Controller, Inject, ParseIntPipe } from '@nestjs/common';
 import {
   UseCaseProxy,
   UsecasesProxyModule,
@@ -26,14 +10,9 @@ import { GetUsersUseCases } from 'src/usecases/user/getUsers.usecases';
 import { UpdateUserUseCases } from 'src/usecases/user/updateUser.usecases';
 import { UserPresenter } from './user.presenter';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 
 @Controller('user')
-@ApiTags('user')
-@ApiResponse({
-  status: 500,
-  description: 'Internal error',
-})
-@ApiExtraModels(UserPresenter)
 export class UserController {
   constructor(
     @Inject(UsecasesProxyModule.GET_USER_USECASES_PROXY)
@@ -48,35 +27,29 @@ export class UserController {
     private readonly deleteUserUsecasesProxy: UseCaseProxy<DeleteUserUseCases>,
   ) {}
 
-  @Get('user')
-  @ApiOkResponse({
-    description: 'user record',
-    type: UserPresenter,
-    isArray: false,
+  @MessagePattern({
+    prefix: 'user',
+    action: 'get-user',
   })
-  async getUser(@Query('id', ParseIntPipe) id: number) {
+  async getUser(@Payload('id', ParseIntPipe) id: number) {
     const user = await this.getUserUsercasesProxy.getInstance().execute(id);
     return new UserPresenter(user);
   }
 
-  @Get('users')
-  @ApiOkResponse({
-    description: 'user records',
-    type: Array<UserPresenter>,
-    isArray: true,
+  @MessagePattern({
+    prefix: 'user',
+    action: 'get-list-user',
   })
   async getAllUser() {
     const users = await this.getUsersUsecasesProxy.getInstance().execute();
     return users.map((user) => new UserPresenter(user));
   }
 
-  @Put('user')
-  @ApiOkResponse({
-    description: 'update user record',
-    type: Boolean,
-    isArray: false,
+  @MessagePattern({
+    prefix: 'user',
+    action: 'update-user',
   })
-  async updateUser(@Body() updateUserDto: UpdateUserDto) {
+  async updateUser(@Payload() updateUserDto: UpdateUserDto) {
     const { id, firstName, lastName } = updateUserDto;
     const result = await this.updateUserUsecasesProxy
       .getInstance()
@@ -85,28 +58,24 @@ export class UserController {
     return result;
   }
 
-  @Post('user')
-  @ApiOkResponse({
-    description: 'create user record',
-    type: UserPresenter,
-    isArray: false,
+  @MessagePattern({
+    prefix: 'user',
+    action: 'create-user',
   })
-  async createUser(@Body() createUserDto: CreateUserDto) {
-    const { username, password, email } = createUserDto;
+  async createUser(@Payload() createUserDto: CreateUserDto) {
+    const { username, password } = createUserDto;
     const result = await this.createUserUsecasesProxy
       .getInstance()
-      .execute(username, password, email);
+      .execute(username, password);
 
     return new UserPresenter(result);
   }
 
-  @Delete('user')
-  @ApiOkResponse({
-    description: 'delete user record',
-    type: UserPresenter,
-    isArray: false,
+  @MessagePattern({
+    prefix: 'user',
+    action: 'delete-user',
   })
-  async deleteUser(@Query('id', ParseIntPipe) id: number) {
+  async deleteUser(@Payload('id', ParseIntPipe) id: number) {
     await this.deleteUserUsecasesProxy.getInstance().execute(id);
 
     return true;

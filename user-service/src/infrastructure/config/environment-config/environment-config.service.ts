@@ -27,4 +27,7 @@ export class EnvironmentConfigService implements DatabaseConfig {
   getDatabaseSync(): boolean {
     return this.configService.get<boolean>('DB_SYNC');
   }
+  getRabbitMQUri(): string {
+    return this.configService.get<string>('RBMQ_URI');
+  }
 }

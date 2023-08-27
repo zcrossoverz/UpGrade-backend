@@ -13,21 +13,23 @@ export class LoggingInterceptor implements NestInterceptor {
   constructor(private readonly logger: LoggerService) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const now = Date.now();
-    const httpContext = context.switchToHttp();
-    const request = httpContext.getRequest();
+    //const now = Date.now();
+    const request = context.getArgByIndex(0);
 
-    const ip = this.getIP(request);
-    this.logger.log(
-      `Incoming Request on ${request.path}`,
-      `method=${request.method} ip=${ip}`,
-    );
+    this.logger.log('test ', `${JSON.stringify(request)}`);
+
+    //const ip = this.getIP(request);
+    // this.logger.log(
+    //   `Incoming Request on ${request.path}`,
+    //   `method=${request.method} ip=${ip}`,
+    // );
 
     return next.handle().pipe(
       tap(() => {
         this.logger.log(
-          `End Request for ${request.path}`,
-          `method=${request.method} ip=${ip} duration=${Date.now() - now}ms`,
+          `End Request for ${request}`,
+          // `method=${request.method} ip=${ip} duration=${Date.now() - now}ms`,
+          'aaaa',
         );
       }),
     );

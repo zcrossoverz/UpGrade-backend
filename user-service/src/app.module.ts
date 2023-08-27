@@ -15,6 +15,6 @@ import { ControllersModule } from './infrastructure/controllers/controllers.modu
     UsecasesProxyModule.register(),
     ControllersModule,
   ],
-  providers: [],
+  providers: [EnvironmentConfigModule],
 })
 export class AppModule {}
