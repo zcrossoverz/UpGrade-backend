@@ -1,9 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { AllExceptionFilter } from './infrastructure/common/filter/exception.filter';
-import { LoggerService } from './infrastructure/logger/logger.service';
-import { LoggingInterceptor } from './infrastructure/common/interceptors/logger.interceptor';
-import { ResponseInterceptor } from './infrastructure/common/interceptors/response.interceptor';
+//import { LoggingInterceptor } from './infrastructure/common/interceptors/logger.interceptor';
+//import { ResponseInterceptor } from './infrastructure/common/interceptors/response.interceptor';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
@@ -24,11 +23,11 @@ async function bootstrap() {
   );
 
   // filters
-  app.useGlobalFilters(new AllExceptionFilter(new LoggerService()));
+  app.useGlobalFilters(new AllExceptionFilter());
 
   // interceptors
-  app.useGlobalInterceptors(new LoggingInterceptor(new LoggerService()));
-  app.useGlobalInterceptors(new ResponseInterceptor());
+  //app.useGlobalInterceptors(new LoggingInterceptor(new LoggerService()));
+  //app.useGlobalInterceptors(new ResponseInterceptor());
 
   await app.listen();
 }
