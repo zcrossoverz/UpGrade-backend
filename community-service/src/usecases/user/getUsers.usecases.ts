@@ -6,7 +6,7 @@ import { IUserRepository } from 'src/domain/repositories/userRepository.interfac
 export class GetUsersUseCases {
   constructor(private readonly userRepository: IUserRepository) {}
   async execute(): Promise<UserM[]> {
-    //throw new RpcException(new BadRequestException('Method not implemented'));
+    throw new RpcException(new BadRequestException('Method not implemented'));
     return await this.userRepository.findAll();
   }
 }
