@@ -15,7 +15,6 @@ export class DatabaseUserRepository implements IUserRepository {
   async create(user: UserM): Promise<UserM> {
     const userNew = new User();
     userNew.email = user.email;
-    userNew.username = user.username;
     userNew.password = user.password;
     const result = await this.userEntityRepository.save(userNew);
     return result;

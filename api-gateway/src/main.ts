@@ -15,6 +15,9 @@ async function bootstrap() {
   // exception
   app.useGlobalFilters(new AllExceptionFilter());
 
+  // enable cors
+  app.enableCors();
+
   await app.listen(3000);
 }
 bootstrap();
