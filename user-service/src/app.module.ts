@@ -5,6 +5,7 @@ import { ExceptionsModule } from './infrastructure/exceptions/exceptions.module'
 import { RepositoriesModule } from './infrastructure/repositories/repositories.module';
 import { UsecasesProxyModule } from './infrastructure/usecases-proxy/usecases-proxy.module';
 import { ControllersModule } from './infrastructure/controllers/controllers.module';
+import { BcryptJSModule } from './infrastructure/libs/bcryptjs/bcrypt.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { ControllersModule } from './infrastructure/controllers/controllers.modu
     LoggerModule,
     ExceptionsModule,
     RepositoriesModule,
+    BcryptJSModule,
     UsecasesProxyModule.register(),
     ControllersModule,
   ],

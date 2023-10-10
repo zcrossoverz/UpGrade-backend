@@ -9,6 +9,8 @@ import { CreateUserUseCases } from 'src/usecases/user/createUser.usecases';
 import { LoggerService } from '../logger/logger.service';
 import { UpdateUserUseCases } from 'src/usecases/user/updateUser.usecases';
 import { DeleteUserUseCases } from 'src/usecases/user/deleteUser.usecases';
+import { BcryptJSModule } from '../libs/bcryptjs/bcrypt.module';
+import { Bcrypt } from '../libs/bcryptjs/bcrypt';
 
 export class UseCaseProxy<T> {
   constructor(private readonly useCase: T) {}
@@ -18,7 +20,7 @@ export class UseCaseProxy<T> {
 }
 
 @Module({
-  imports: [LoggerModule, RepositoriesModule, ExceptionsModule],
+  imports: [LoggerModule, RepositoriesModule, ExceptionsModule, BcryptJSModule],
 })
 export class UsecasesProxyModule {
   static GET_USER_USECASES_PROXY = 'getUserUsecasesProxy';
@@ -44,12 +46,16 @@ export class UsecasesProxyModule {
             new UseCaseProxy(new GetUsersUseCases(userRepository)),
         },
         {
-          inject: [DatabaseUserRepository, LoggerService],
+          inject: [DatabaseUserRepository, LoggerService, Bcrypt],
           provide: UsecasesProxyModule.POST_USER_USECASES_PROXY,
           useFactory: (
             userRepository: DatabaseUserRepository,
             logger: LoggerService,
-          ) => new UseCaseProxy(new CreateUserUseCases(logger, userRepository)),
+            bcrypt: Bcrypt,
+          ) =>
+            new UseCaseProxy(
+              new CreateUserUseCases(logger, userRepository, bcrypt),
+            ),
         },
         {
           inject: [DatabaseUserRepository, LoggerService],
