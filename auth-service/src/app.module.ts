@@ -14,6 +14,7 @@ import { ControllersModule } from './infrastructure/controllers/controllers.modu
     RepositoriesModule,
     UsecasesProxyModule.register(),
     ControllersModule,
+    // CacheModule.register<RedisClientOptions>(),
   ],
   providers: [EnvironmentConfigModule],
 })
