@@ -2,6 +2,7 @@ import { Cache } from 'cache-manager';
 import { ICrypto } from 'src/domain/interface/crypto';
 import { IJwt } from 'src/domain/interface/jwt';
 import { ILogger } from 'src/domain/logger/logger.interface';
+import { EnvironmentConfigService } from 'src/infrastructure/config/environment-config/environment-config.service';
 
 export class RefreshTokenUseCase {
   constructor(
@@ -9,6 +10,7 @@ export class RefreshTokenUseCase {
     private readonly crypto: ICrypto,
     private readonly jwt: IJwt,
     private readonly cacheManager: Cache,
+    private readonly config: EnvironmentConfigService,
   ) {}
 
   async execute(redisUUID: string) {
@@ -21,7 +23,7 @@ export class RefreshTokenUseCase {
         uuid: newUUID,
         ttl: 30 * 24 * 60 * 60 * 1000,
       },
-      'nhan',
+      this.config.getJwtSecret(),
     );
 
     this.logger.log('validate token', JSON.stringify(user));

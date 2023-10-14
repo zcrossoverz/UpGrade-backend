@@ -6,6 +6,7 @@ import { IJwt } from 'src/domain/interface/jwt';
 import { ILogger } from 'src/domain/logger/logger.interface';
 import { IUserRepository } from 'src/domain/repositories/userRepository.interface';
 import { ICrypto } from 'src/domain/interface/crypto';
+import { EnvironmentConfigService } from 'src/infrastructure/config/environment-config/environment-config.service';
 
 export class LoginUseCase {
   constructor(
@@ -15,6 +16,7 @@ export class LoginUseCase {
     private readonly jwt: IJwt,
     private readonly cacheManager: Cache,
     private readonly crypto: ICrypto,
+    private readonly config: EnvironmentConfigService,
   ) {}
 
   async execute(email: string, password: string): Promise<any> {
@@ -41,9 +43,8 @@ export class LoginUseCase {
             new Date().getTime() + 30 * 24 * 60 * 60 * 1000,
           ).getTime(),
         },
-        'nhan',
+        this.config.getJwtSecret(),
       );
-      this.logger.log('login 2', JSON.stringify(token));
       this.logger.log(
         'get token',
         JSON.stringify(await this.cacheManager.get(uuidToken)),

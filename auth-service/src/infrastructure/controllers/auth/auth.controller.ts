@@ -8,6 +8,7 @@ import { LoginDto, ResponseDto } from './auth.dto';
 import { LoginUseCase } from 'src/usecases/auth/login.usecase';
 import { ValidateToken } from 'src/usecases/auth/validateToken';
 import { RefreshTokenUseCase } from 'src/usecases/auth/refreshToken';
+import { RevokeTokenUseCase } from 'src/usecases/auth/revokeToken';
 
 @Controller()
 export class AuthController {
@@ -18,8 +19,12 @@ export class AuthController {
       UsecasesProxyModule.POST_AUTHENTICATION_VALIDATETOKEN_USECASES_PROXY,
     )
     private readonly validateUseCaseProxy: UseCaseProxy<ValidateToken>,
+
     @Inject(UsecasesProxyModule.POST_AUTHENTICATION_REFRESHTOKEN_USECASES_PROXY)
     private readonly refreshTokenUseCaseProxy: UseCaseProxy<RefreshTokenUseCase>,
+
+    @Inject(UsecasesProxyModule.POST_AUTHENTICATION_REVOKETOKEN_USECASES_PROXY)
+    private readonly revokeToKenUseCasesProxy: UseCaseProxy<RevokeTokenUseCase>,
   ) {}
 
   @MessagePattern({
@@ -53,6 +58,18 @@ export class AuthController {
     const result = await this.refreshTokenUseCaseProxy
       .getInstance()
       .execute(redisUUID);
+    return result;
+  }
+
+  @MessagePattern({
+    prefix: 'authentication',
+    action: 'revoke-token',
+  })
+  async revokeToken(@Payload() payload) {
+    const { token } = payload;
+    const result = await this.revokeToKenUseCasesProxy
+      .getInstance()
+      .execute(token);
     return result;
   }
 }

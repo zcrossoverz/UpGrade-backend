@@ -5,6 +5,7 @@ import { ICrypto } from 'src/domain/interface/crypto';
 import { IJwt } from 'src/domain/interface/jwt';
 import { ILogger } from 'src/domain/logger/logger.interface';
 import { UserM } from 'src/domain/model/user';
+import { EnvironmentConfigService } from 'src/infrastructure/config/environment-config/environment-config.service';
 
 export class ValidateToken {
   constructor(
@@ -12,13 +13,17 @@ export class ValidateToken {
     private readonly jwt: IJwt,
     private readonly cacheManager: Cache,
     private readonly crypto: ICrypto,
+    private readonly config: EnvironmentConfigService,
   ) {}
 
   async execute(tokenUUID: string) {
     if (!tokenUUID.includes('Bearer ')) {
       throw new RpcException(new BadRequestException('token must be bearer'));
     }
-    const redisKey = this.jwt.verify(tokenUUID.replace('Bearer ', ''), 'nhan');
+    const redisKey = this.jwt.verify(
+      tokenUUID.replace('Bearer ', ''),
+      this.config.getJwtSecret(),
+    );
     const { uuid, expired } = redisKey;
     const remainingMilliseconds = expired - new Date().getTime();
     const remainingDays = Math.ceil(

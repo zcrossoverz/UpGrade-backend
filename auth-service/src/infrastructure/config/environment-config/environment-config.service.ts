@@ -30,4 +30,8 @@ export class EnvironmentConfigService implements DatabaseConfig {
   getRabbitMQUri(): string {
     return this.configService.get<string>('RBMQ_URI');
   }
+
+  getJwtSecret(): string {
+    return this.configService.get<string>('SECRET_KEY');
+  }
 }
