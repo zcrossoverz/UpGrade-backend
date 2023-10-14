@@ -6,8 +6,8 @@ import { Cache, Store, WrapTTL } from 'cache-manager';
 @Injectable()
 export class CacheService implements Cache {
   constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
-  async set(key: string, value: unknown, ttl?: number) {
-    await this.cacheManager.set(key, value);
+  async set(key: string, value: unknown, dayTtl?: number) {
+    await this.cacheManager.set(key, value, dayTtl * 24 * 60 * 60 * 1000);
   }
   async get<T>(key: string) {
     return await this.cacheManager.get<T>(key);

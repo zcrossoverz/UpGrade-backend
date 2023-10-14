@@ -33,11 +33,13 @@ export class LoginUseCase {
     } else {
       const uuidToken = this.crypto.randomUUID();
       this.logger.log('uuidToken', uuidToken);
-      await this.cacheManager.set(uuidToken, user, 30 * 24 * 60 * 60); // ttl 30 days
+      await this.cacheManager.set(uuidToken, user, 30); // ttl 30 days
       const token = this.jwt.sign(
         {
           uuid: uuidToken,
-          ttl: 30 * 24 * 60 * 60 * 1000,
+          expired: new Date(
+            new Date().getTime() + 30 * 24 * 60 * 60 * 1000,
+          ).getTime(),
         },
         'nhan',
       );

@@ -6,12 +6,20 @@ import {
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { LoginDto, ResponseDto } from './auth.dto';
 import { LoginUseCase } from 'src/usecases/auth/login.usecase';
+import { ValidateToken } from 'src/usecases/auth/validateToken';
+import { RefreshTokenUseCase } from 'src/usecases/auth/refreshToken';
 
 @Controller()
 export class AuthController {
   constructor(
     @Inject(UsecasesProxyModule.POST_AUTHENTICATION_LOGIN_USECASES_PROXY)
     private readonly loginUseCaseProxy: UseCaseProxy<LoginUseCase>,
+    @Inject(
+      UsecasesProxyModule.POST_AUTHENTICATION_VALIDATETOKEN_USECASES_PROXY,
+    )
+    private readonly validateUseCaseProxy: UseCaseProxy<ValidateToken>,
+    @Inject(UsecasesProxyModule.POST_AUTHENTICATION_REFRESHTOKEN_USECASES_PROXY)
+    private readonly refreshTokenUseCaseProxy: UseCaseProxy<RefreshTokenUseCase>,
   ) {}
 
   @MessagePattern({
@@ -24,5 +32,27 @@ export class AuthController {
       .getInstance()
       .execute(email, password);
     return new ResponseDto(result);
+  }
+
+  @MessagePattern({
+    prefix: 'authentication',
+    action: 'validate-token',
+  })
+  async validateToken(@Payload() payload) {
+    const { token } = payload;
+    const result = await this.validateUseCaseProxy.getInstance().execute(token);
+    return result;
+  }
+
+  @MessagePattern({
+    prefix: 'authentication',
+    action: 'refresh-token',
+  })
+  async refreshToken(@Payload() payload) {
+    const { redisUUID } = payload;
+    const result = await this.refreshTokenUseCaseProxy
+      .getInstance()
+      .execute(redisUUID);
+    return result;
   }
 }

@@ -13,6 +13,8 @@ import { CacheService } from '../libs/cache/cache';
 import { CacheCustomModule } from '../libs/cache/cache.module';
 import { CryptoModule } from '../libs/crypto/crypto.module';
 import { Crypto } from '../libs/crypto/crypto';
+import { ValidateToken } from 'src/usecases/auth/validateToken';
+import { RefreshTokenUseCase } from 'src/usecases/auth/refreshToken';
 
 export class UseCaseProxy<T> {
   constructor(private readonly useCase: T) {}
@@ -35,6 +37,12 @@ export class UseCaseProxy<T> {
 export class UsecasesProxyModule {
   static POST_AUTHENTICATION_LOGIN_USECASES_PROXY =
     'postAuthenticationUsecasesProxy';
+
+  static POST_AUTHENTICATION_VALIDATETOKEN_USECASES_PROXY =
+    'postAuthenticationValidateToken';
+
+  static POST_AUTHENTICATION_REFRESHTOKEN_USECASES_PROXY =
+    'postAuthenticationRefreshToken';
 
   static register(): DynamicModule {
     return {
@@ -69,8 +77,40 @@ export class UsecasesProxyModule {
               ),
             ),
         },
+        {
+          inject: [LoggerService, Jwt, CacheService, Crypto],
+          provide:
+            UsecasesProxyModule.POST_AUTHENTICATION_VALIDATETOKEN_USECASES_PROXY,
+          useFactory: (
+            logger: LoggerService,
+            jwt: Jwt,
+            cacheManager: CacheService,
+            crypto: Crypto,
+          ) =>
+            new UseCaseProxy(
+              new ValidateToken(logger, jwt, cacheManager, crypto),
+            ),
+        },
+        {
+          inject: [LoggerService, Crypto, Jwt, CacheService],
+          provide:
+            UsecasesProxyModule.POST_AUTHENTICATION_REFRESHTOKEN_USECASES_PROXY,
+          useFactory: (
+            logger: LoggerService,
+            crypto: Crypto,
+            jwt: Jwt,
+            cacheManager: CacheService,
+          ) =>
+            new UseCaseProxy(
+              new RefreshTokenUseCase(logger, crypto, jwt, cacheManager),
+            ),
+        },
       ],
-      exports: [UsecasesProxyModule.POST_AUTHENTICATION_LOGIN_USECASES_PROXY],
+      exports: [
+        UsecasesProxyModule.POST_AUTHENTICATION_LOGIN_USECASES_PROXY,
+        UsecasesProxyModule.POST_AUTHENTICATION_VALIDATETOKEN_USECASES_PROXY,
+        UsecasesProxyModule.POST_AUTHENTICATION_REFRESHTOKEN_USECASES_PROXY,
+      ],
     };
   }
 }
