@@ -3,4 +3,8 @@ export const MESSAGE_PATTERNS_AUTH = {
     prefix: 'authentication',
     action: 'login',
   },
+  validateToken: {
+    prefix: 'authentication',
+    action: 'validate-token',
+  },
 };

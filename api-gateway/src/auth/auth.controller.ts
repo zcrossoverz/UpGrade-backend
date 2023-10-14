@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Headers } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './auth.dto';
 
@@ -10,5 +10,10 @@ export class AuthController {
   create(@Body() loginDto: LoginDto) {
     const { email, password } = loginDto;
     return this.authService.login(email, password);
+  }
+
+  @Post('/test')
+  test(@Headers('authorization') authorizationHeader: string) {
+    return this.authService.validateToken(authorizationHeader);
   }
 }

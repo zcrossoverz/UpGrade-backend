@@ -9,4 +9,8 @@ export class AuthService {
   login(email: string, password: string) {
     return this.client.send(MESSAGE_PATTERNS_AUTH.login, { email, password });
   }
+
+  validateToken(token: string) {
+    return this.client.send(MESSAGE_PATTERNS_AUTH.validateToken, { token });
+  }
 }
