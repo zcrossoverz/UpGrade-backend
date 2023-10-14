@@ -7,4 +7,8 @@ export const MESSAGE_PATTERNS_AUTH = {
     prefix: 'authentication',
     action: 'validate-token',
   },
+  revokeToken: {
+    prefix: 'authentication',
+    action: 'revoke-token',
+  },
 };

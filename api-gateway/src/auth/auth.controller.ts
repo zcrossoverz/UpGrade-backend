@@ -12,8 +12,13 @@ export class AuthController {
     return this.authService.login(email, password);
   }
 
-  @Post('/test')
-  test(@Headers('authorization') authorizationHeader: string) {
+  @Post('/validateToken')
+  validateToken(@Headers('authorization') authorizationHeader: string) {
     return this.authService.validateToken(authorizationHeader);
+  }
+
+  @Post('/revokeToken')
+  revokeToken(@Headers('authorization') authorizationHeader: string) {
+    return this.authService.revokeToken(authorizationHeader);
   }
 }

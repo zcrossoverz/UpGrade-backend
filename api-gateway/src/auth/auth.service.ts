@@ -13,4 +13,8 @@ export class AuthService {
   validateToken(token: string) {
     return this.client.send(MESSAGE_PATTERNS_AUTH.validateToken, { token });
   }
+
+  revokeToken(token: string) {
+    return this.client.send(MESSAGE_PATTERNS_AUTH.revokeToken, { token });
+  }
 }
