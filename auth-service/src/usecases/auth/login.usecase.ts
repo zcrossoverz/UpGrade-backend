@@ -33,6 +33,9 @@ export class LoginUseCase {
         new BadRequestException('password is not correct!'),
       );
     } else {
+      if ('password' in user) {
+        delete user.password;
+      }
       const uuidToken = this.crypto.randomUUID();
       this.logger.log('uuidToken', uuidToken);
       await this.cacheManager.set(uuidToken, user, 30); // ttl 30 days

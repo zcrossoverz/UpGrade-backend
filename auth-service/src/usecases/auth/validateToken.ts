@@ -20,10 +20,19 @@ export class ValidateToken {
     if (!tokenUUID.includes('Bearer ')) {
       throw new RpcException(new BadRequestException('token must be bearer'));
     }
-    const redisKey = this.jwt.verify(
-      tokenUUID.replace('Bearer ', ''),
-      this.config.getJwtSecret(),
-    );
+
+    let redisKey: { uuid: any; expired: any };
+    try {
+      redisKey = this.jwt.verify(
+        tokenUUID.replace('Bearer ', ''),
+        this.config.getJwtSecret(),
+      );
+    } catch (error) {
+      throw new RpcException(
+        new HttpException('token invalid!', HttpStatus.UNAUTHORIZED),
+      );
+    }
+
     const { uuid, expired } = redisKey;
     const remainingMilliseconds = expired - new Date().getTime();
     const remainingDays = Math.ceil(
@@ -38,6 +47,7 @@ export class ValidateToken {
         new HttpException('token invalid!', HttpStatus.UNAUTHORIZED),
       );
     }
+
     if (remainingDays < 3 && user) {
       const newUUID = this.crypto.randomUUID();
       await this.cacheManager.set(newUUID, user, 30); // 30 days
