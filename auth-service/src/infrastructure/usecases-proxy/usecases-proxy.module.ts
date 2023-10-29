@@ -115,6 +115,7 @@ export class UsecasesProxyModule {
             Jwt,
             CacheService,
             EnvironmentConfigService,
+            DatabaseUserRepository,
           ],
           provide:
             UsecasesProxyModule.POST_AUTHENTICATION_REFRESHTOKEN_USECASES_PROXY,
@@ -124,6 +125,7 @@ export class UsecasesProxyModule {
             jwt: Jwt,
             cacheManager: CacheService,
             config: EnvironmentConfigService,
+            userRepository: DatabaseUserRepository,
           ) =>
             new UseCaseProxy(
               new RefreshTokenUseCase(
@@ -132,6 +134,7 @@ export class UsecasesProxyModule {
                 jwt,
                 cacheManager,
                 config,
+                userRepository,
               ),
             ),
         },

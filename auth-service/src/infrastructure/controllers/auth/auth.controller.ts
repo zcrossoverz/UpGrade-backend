@@ -54,10 +54,10 @@ export class AuthController {
     action: 'refresh-token',
   })
   async refreshToken(@Payload() payload) {
-    const { redisUUID } = payload;
+    const { token } = payload;
     const result = await this.refreshTokenUseCaseProxy
       .getInstance()
-      .execute(redisUUID);
+      .execute(token);
     return result;
   }
 

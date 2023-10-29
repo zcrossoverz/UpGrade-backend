@@ -1,3 +1,4 @@
+import { ROLE } from 'src/domain/model/user';
 import {
   Column,
   CreateDateColumn,
@@ -25,6 +26,15 @@ export class User {
 
   @Column({ nullable: true })
   lastName: string;
+
+  @Column({ nullable: true })
+  bio: string;
+
+  @Column({ enum: ROLE, default: ROLE.USER })
+  role: ROLE;
+
+  @Column({ default: true })
+  isActive: boolean;
 
   @CreateDateColumn({ nullable: false })
   created_at: Date;
