@@ -4,6 +4,7 @@ import { UserM } from 'src/domain/model/user';
 import { IUserRepository } from 'src/domain/repositories/userRepository.interface';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
+import { UpdateUserDto } from 'src/domain/dto/updateUserDto';
 
 @Injectable()
 export class DatabaseUserRepository implements IUserRepository {
@@ -29,10 +30,8 @@ export class DatabaseUserRepository implements IUserRepository {
     });
     return result;
   }
-  async update(id: number, user: UserM): Promise<boolean> {
-    const result = await this.userEntityRepository.update(user, {
-      id,
-    });
+  async update(id: number, user: UpdateUserDto): Promise<boolean> {
+    const result = await this.userEntityRepository.update(id, user);
     return result.affected == 1;
   }
   async delete(id: number): Promise<void> {

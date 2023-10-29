@@ -9,8 +9,9 @@ import { GetUserUseCases } from 'src/usecases/user/getUser.usecases';
 import { GetUsersUseCases } from 'src/usecases/user/getUsers.usecases';
 import { UpdateUserUseCases } from 'src/usecases/user/updateUser.usecases';
 import { UserPresenter } from './user.presenter';
-import { CreateUserDto, UpdateUserDto } from './user.dto';
+import { CreateUserDto } from './user.dto';
 import { MessagePattern, Payload } from '@nestjs/microservices';
+import { UserM } from 'src/domain/model/user';
 
 @Controller('user')
 export class UserController {
@@ -49,11 +50,11 @@ export class UserController {
     prefix: 'user',
     action: 'update-user',
   })
-  async updateUser(@Payload() updateUserDto: UpdateUserDto) {
-    const { id, firstName, lastName } = updateUserDto;
+  async updateUser(@Payload() updateUserDto: UserM) {
+    const { id } = updateUserDto;
     const result = await this.updateUserUsecasesProxy
       .getInstance()
-      .execute(id, firstName, lastName);
+      .execute(id, updateUserDto);
 
     return result;
   }
