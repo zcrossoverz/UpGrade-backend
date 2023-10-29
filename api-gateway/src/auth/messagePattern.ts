@@ -11,4 +11,8 @@ export const MESSAGE_PATTERNS_AUTH = {
     prefix: 'authentication',
     action: 'revoke-token',
   },
+  refreshToken: {
+    prefix: 'authentication',
+    action: 'refresh-token',
+  },
 };

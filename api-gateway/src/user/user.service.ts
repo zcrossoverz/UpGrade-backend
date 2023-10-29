@@ -20,9 +20,10 @@ export class UserService {
     return this.client.send(MESSAGE_PATTERNS_USER.getOne, { id });
   }
 
-  update(updateUserDto: UpdateUserDto) {
+  update(user_id: number, updateUserDto: UpdateUserDto) {
     return this.client.send(MESSAGE_PATTERNS_USER.update, {
       ...updateUserDto,
+      id: user_id,
     });
   }
 

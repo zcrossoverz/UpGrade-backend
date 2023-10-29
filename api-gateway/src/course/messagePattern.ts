@@ -11,4 +11,8 @@ export const COURSE_MESSAGE_PATTERNS = {
     prefix: 'course',
     action: 'get-list',
   },
+  uploadVideo: {
+    prefix: 'course',
+    action: 'upload-video',
+  },
 };

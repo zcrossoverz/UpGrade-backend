@@ -40,4 +40,15 @@ export class AuthService {
   revokeToken(token: string) {
     return this.client.send(MESSAGE_PATTERNS_AUTH.revokeToken, { token });
   }
+
+  async refreshToken(token: string) {
+    const cacheResult = await this.cacheManager.get(
+      token.replace('Bearer ', 'SESSION_'),
+    );
+    if (cacheResult) {
+      this.cacheManager.del(token.replace('Bearer ', 'SESSION_'));
+    }
+
+    return this.client.send(MESSAGE_PATTERNS_AUTH.refreshToken, { token });
+  }
 }

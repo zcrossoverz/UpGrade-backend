@@ -18,4 +18,8 @@ export class CourseService {
   findOne(id: number) {
     return this.client.send(COURSE_MESSAGE_PATTERNS.getOne, { id });
   }
+
+  upload() {
+    return this.client.send(COURSE_MESSAGE_PATTERNS.uploadVideo, {});
+  }
 }

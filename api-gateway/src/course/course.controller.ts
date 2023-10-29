@@ -23,6 +23,11 @@ export class CourseController {
     return this.courseService.create(createCourseDto);
   }
 
+  @Post('/upload')
+  upload() {
+    return this.courseService.upload();
+  }
+
   @Get('')
   findAll() {
     return this.courseService.getList();

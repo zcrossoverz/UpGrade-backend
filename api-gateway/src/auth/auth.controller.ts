@@ -21,4 +21,9 @@ export class AuthController {
   revokeToken(@Headers('authorization') authorizationHeader: string) {
     return this.authService.revokeToken(authorizationHeader);
   }
+
+  @Post('/refreshToken')
+  refreshToken(@Headers('authorization') authorizationHeader: string) {
+    return this.authService.refreshToken(authorizationHeader);
+  }
 }
