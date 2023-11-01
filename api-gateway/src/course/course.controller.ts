@@ -6,10 +6,13 @@ import {
   Param,
   UseGuards,
   Request,
+  UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
 import { CourseService } from './course.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { AuthGuard } from 'src/common/guards/auth';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
 @Controller('course')
 export class CourseController {
@@ -17,10 +20,24 @@ export class CourseController {
 
   @UseGuards(AuthGuard)
   @Post('/create')
-  create(@Body() createCourseDto: CreateCourseDto, @Request() request) {
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'thumbnail', maxCount: 1 },
+      { name: 'trailer', maxCount: 1 },
+    ]),
+  )
+  create(
+    @Body() createCourseDto: CreateCourseDto,
+    @Request() request,
+    @UploadedFiles()
+    files: {
+      thumbnail?: Express.Multer.File[];
+    },
+  ) {
     const { user } = request;
     createCourseDto.instructor_id = user.id;
-    return this.courseService.create(createCourseDto);
+
+    return this.courseService.create(createCourseDto, files);
   }
 
   @Post('/upload')
