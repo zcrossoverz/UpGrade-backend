@@ -12,15 +12,20 @@ export class CourseRepository implements ICourseRepository {
     private readonly courseRepository: Repository<Course>,
   ) {}
 
-  async create(title: string, instructor_id: number): Promise<CourseM> {
+  async create(
+    title: string,
+    instructor_id: number,
+    description: string,
+    thumbnail_url: string,
+  ): Promise<CourseM> {
     const result = await this.courseRepository.save(
       this.courseRepository.create({
         title,
         instructor_id,
-        description: '',
+        description: description,
         price: 0,
-        thumbnail_url: '',
-        status: typeStatusCourse.INIT,
+        thumbnail_url: thumbnail_url,
+        status: typeStatusCourse.DRAFT,
       }),
     );
     return result;

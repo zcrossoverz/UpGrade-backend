@@ -1,10 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { DatabaseConfig } from 'src/domain/config/database.interface';
+import { AppConfig } from 'src/domain/config/database.interface';
 
 @Injectable()
-export class EnvironmentConfigService implements DatabaseConfig {
+export class EnvironmentConfigService implements AppConfig {
   constructor(private configService: ConfigService) {}
+  getDriveClientId(): string {
+    return this.configService.get<string>('GDRIVE_CLIENT_ID');
+  }
+  getDriveClientSecret(): string {
+    return this.configService.get<string>('GDRIVE_SECRET_KEY');
+  }
+  getDriveRedirectUri(): string {
+    return this.configService.get<string>('GDRIVE_URI_CALLBACK');
+  }
+  getDriveMainFolderId(): string {
+    return this.configService.get<string>('GDRIVE_MAINFOLDER_ID');
+  }
+  getDriveAccessToken(): string {
+    return this.configService.get<string>('GDRIVE_ACCESS_TOKEN');
+  }
+  getDriveRefreshToken(): string {
+    return this.configService.get<string>('GDRIVE_REFRESH_TOKEN');
+  }
 
   getDatabaseHost(): string {
     return this.configService.get<string>('DB_HOST');

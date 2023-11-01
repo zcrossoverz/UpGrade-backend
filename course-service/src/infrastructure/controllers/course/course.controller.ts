@@ -8,6 +8,7 @@ import { CreateDraftCourseUseCases } from 'src/usecases/course/createDraftCourse
 import { GetCourseUseCase } from 'src/usecases/course/getCourse.usecases';
 import { CreateCourseDto } from './course.dto';
 import { GetListCoursesUseCase } from 'src/usecases/course/getListCourses.usecases';
+import { UploadVideoCoursesUseCase } from 'src/usecases/course/uploadVideo.usecases';
 
 @Controller('course')
 export class CourseController {
@@ -18,6 +19,8 @@ export class CourseController {
     private readonly getCourseUsecasesProxy: UseCaseProxy<GetCourseUseCase>,
     @Inject(UsecasesProxyModule.GET_LIST_COURSE_USECASES_PROXY)
     private readonly getListCourseUsecasesProxy: UseCaseProxy<GetListCoursesUseCase>,
+    @Inject(UsecasesProxyModule.POST_UPLOADVIDEO_USECASES_PROXY)
+    private readonly uploadVideoUsecaseProxy: UseCaseProxy<UploadVideoCoursesUseCase>,
   ) {}
 
   @MessagePattern({
@@ -25,10 +28,13 @@ export class CourseController {
     action: 'create',
   })
   async createCourse(@Payload() createCourseDto: CreateCourseDto) {
-    const { title, instructor_id } = createCourseDto;
+    const { title, instructor_id, thumbnail, description } = createCourseDto;
+
+    // console.log(thumbnail, trailer, title, instructor_id);
+
     const course = await this.createCourseUsecasesProxy
       .getInstance()
-      .excute(title, instructor_id);
+      .excute(title, instructor_id, description, thumbnail);
     return course;
   }
 
@@ -47,6 +53,15 @@ export class CourseController {
   })
   async getListCourse() {
     const result = await this.getListCourseUsecasesProxy.getInstance().excute();
+    return result;
+  }
+
+  @MessagePattern({
+    prefix: 'course',
+    action: 'upload-video',
+  })
+  async uploadVideo() {
+    const result = await this.uploadVideoUsecaseProxy.getInstance().excute();
     return result;
   }
 }

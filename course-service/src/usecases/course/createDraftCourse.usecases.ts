@@ -10,12 +10,27 @@ export class CreateDraftCourseUseCases {
     private readonly courseRepository: ICourseRepository,
   ) {}
 
-  async excute(title: string, instructor_id: number): Promise<CourseM> {
+  async excute(
+    title: string,
+    instructor_id: number,
+    description: string,
+    thumbnail?: string,
+  ): Promise<CourseM> {
     if (!title || !instructor_id)
       throw new RpcException(
         new BadRequestException('Title and instructor id are required'),
       );
-    const result = await this.courseRepository.create(title, instructor_id);
+
+    if (!thumbnail) {
+      throw new RpcException(new BadRequestException('Thumbnail are required'));
+    }
+
+    const result = await this.courseRepository.create(
+      title,
+      instructor_id,
+      description,
+      thumbnail,
+    );
     this.logger.log(
       'creaetDraftCourseUseCases execute',
       'New draft course have been created',
