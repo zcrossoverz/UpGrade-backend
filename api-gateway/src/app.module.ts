@@ -8,12 +8,14 @@ import { AuthModule } from './auth/auth.module';
 import { GdriveModule } from './common/gdrive/gdrive.module';
 import { ConfigModule } from '@nestjs/config';
 import configuration from 'config/configuration';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
     UserModule,
     LoggerModule,
     CourseModule,
+    CategoryModule,
     AuthModule,
     GdriveModule,
     ConfigModule.forRoot({
