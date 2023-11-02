@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { UsecasesProxyModule } from '../usecases-proxy/usecases-proxy.module';
 import { CourseController } from './course/course.controller';
+import { CategoryController } from './category/category.controller';
 
 @Module({
   imports: [UsecasesProxyModule.register()],
-  controllers: [CourseController],
+  controllers: [CourseController, CategoryController],
 })
 export class ControllersModule {}

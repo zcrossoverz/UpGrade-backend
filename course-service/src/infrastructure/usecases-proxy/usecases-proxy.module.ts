@@ -10,6 +10,11 @@ import { CreateDraftCourseUseCases } from 'src/usecases/course/createDraftCourse
 import { UploadVideoCoursesUseCase } from 'src/usecases/course/uploadVideo.usecases';
 import { GdriveModule } from '../libs/gdrive/gdrive.module';
 import { GDrive } from '../libs/gdrive/gdrive';
+import { CategoryRepository } from '../repositories/category.repository';
+import { CreateCategoryUseCases } from 'src/usecases/category/createCategory';
+import { UpdateCategoryUseCases } from 'src/usecases/category/updateCategory';
+import { GetListCategoryUseCases } from 'src/usecases/category/getListCategory';
+import { DeleteCategoryUseCases } from 'src/usecases/category/deleteCategory';
 
 export class UseCaseProxy<T> {
   constructor(private readonly useCase: T) {}
@@ -22,12 +27,19 @@ export class UseCaseProxy<T> {
   imports: [LoggerModule, RepositoriesModule, ExceptionsModule, GdriveModule],
 })
 export class UsecasesProxyModule {
+  // course
   static GET_COURSE_USECASES_PROXY = 'getCourseUsecasesProxy';
   static GET_LIST_COURSE_USECASES_PROXY = 'getListCourseUsecasesProxy';
   static CREATE_COURSE_USECASES_PROXY = 'postCourseUsecasesProxy';
   static DELETE_COURSE_USECASES_PROXY = 'deleteCourseUsecasesProxy';
   static UPDATE_COURSE_USER_USECASES_PROXY = 'putCourseUsecasesProxy';
   static POST_UPLOADVIDEO_USECASES_PROXY = 'postUploadVideoUsecasesProxy';
+
+  // category
+  static GET_LIST_CATEGORY_USECASES_PROXY = 'getListCategoryUsecasesProxy';
+  static CREATE_CATEGORY_USECASES_PROXY = 'postCategoryUsecasesProxy';
+  static DELETE_CATEGORY_USECASES_PROXY = 'deleteCategoryUsecasesProxy';
+  static UPDATE_CATEGORY_USER_USECASES_PROXY = 'putCategoryUsecasesProxy';
 
   static USE_CASE_PROXY_MAP: {
     provide: string;
@@ -65,6 +77,52 @@ export class UsecasesProxyModule {
           new UploadVideoCoursesUseCase(logger, courseRepository, gdrive),
         ),
       inject: [LoggerService, CourseRepository, GDrive],
+    },
+
+    // category
+    {
+      provide: UsecasesProxyModule.CREATE_CATEGORY_USECASES_PROXY,
+      useFactory: (
+        logger: LoggerService,
+        categoryRepository: CategoryRepository,
+      ) =>
+        new UseCaseProxy(
+          new CreateCategoryUseCases(logger, categoryRepository),
+        ),
+      inject: [LoggerService, CategoryRepository],
+    },
+    {
+      provide: UsecasesProxyModule.UPDATE_CATEGORY_USER_USECASES_PROXY,
+      useFactory: (
+        logger: LoggerService,
+        categoryRepository: CategoryRepository,
+      ) =>
+        new UseCaseProxy(
+          new UpdateCategoryUseCases(logger, categoryRepository),
+        ),
+      inject: [LoggerService, CategoryRepository],
+    },
+    {
+      provide: UsecasesProxyModule.DELETE_CATEGORY_USECASES_PROXY,
+      useFactory: (
+        logger: LoggerService,
+        categoryRepository: CategoryRepository,
+      ) =>
+        new UseCaseProxy(
+          new DeleteCategoryUseCases(logger, categoryRepository),
+        ),
+      inject: [LoggerService, CategoryRepository],
+    },
+    {
+      provide: UsecasesProxyModule.GET_LIST_CATEGORY_USECASES_PROXY,
+      useFactory: (
+        logger: LoggerService,
+        categoryRepository: CategoryRepository,
+      ) =>
+        new UseCaseProxy(
+          new GetListCategoryUseCases(logger, categoryRepository),
+        ),
+      inject: [LoggerService, CategoryRepository],
     },
   ];
 
