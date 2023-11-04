@@ -1,12 +1,12 @@
 import { Injectable, Logger, StreamableFile } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { google } from 'googleapis';
+import { drive_v3, google } from 'googleapis';
 
 @Injectable()
 export class GDrive {
   private readonly oauth2Client: any;
 
-  private readonly drive: any;
+  private readonly drive: drive_v3.Drive;
 
   private readonly logger = new Logger('GDrive');
 
@@ -46,17 +46,9 @@ export class GDrive {
     }
   }
   async getLinkVideo(fileId: string): Promise<any> {
-    try {
-      const file = await this.drive.files.get({
-        fileId,
-        alt: 'media',
-      });
-
-      return file;
-    } catch (error) {
-      this.logger.error(error);
-      return error;
-    }
+    return `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&key=${this.config.get<string>(
+      'gdrive.apikey',
+    )}`;
   }
   async createFolderIfNotExist(folderName: string): Promise<any> {
     try {
@@ -119,6 +111,38 @@ export class GDrive {
         },
       });
       return res;
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async uploadVideoResumable(folderId: string, name: string, file: any) {
+    try {
+      const streamAbleFile = new StreamableFile(Buffer.from(file.buffer));
+      const readStream = streamAbleFile.getStream();
+
+      const request = await this.drive.files.create(
+        {
+          requestBody: {
+            name: name,
+            parents: [folderId],
+          },
+          media: {
+            mimeType: 'video/mp4',
+            body: readStream,
+          },
+          fields: 'id',
+        },
+        {
+          // Use the resumable option
+          onUploadProgress: (evt) => {
+            // Log the progress
+            const progress = (evt.bytesRead / file.buffer.length) * 100;
+            console.log(`${progress}% completed`);
+          },
+        },
+      );
+      return request.data.id;
     } catch (error) {
       return error;
     }

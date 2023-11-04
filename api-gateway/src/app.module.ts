@@ -9,6 +9,7 @@ import { GdriveModule } from './common/gdrive/gdrive.module';
 import { ConfigModule } from '@nestjs/config';
 import configuration from 'config/configuration';
 import { CategoryModule } from './category/category.module';
+import { UnitModule } from './unit/unit.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { CategoryModule } from './category/category.module';
     CategoryModule,
     AuthModule,
     GdriveModule,
+    UnitModule,
     ConfigModule.forRoot({
       load: [configuration],
     }),

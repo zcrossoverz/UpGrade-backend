@@ -42,7 +42,22 @@ export class CourseService {
     return this.client.send(COURSE_MESSAGE_PATTERNS.getOne, { id });
   }
 
-  upload() {
-    return this.client.send(COURSE_MESSAGE_PATTERNS.uploadVideo, {});
+  async upload(files: any) {
+    const folder = await this.gdrive.createFolderIfNotExist('test video');
+    const file = files.video[0];
+
+    const fileId = await this.gdrive.uploadVideoResumable(
+      folder,
+      'test video 2',
+      file,
+    );
+    const link = await this.gdrive.getLinkVideo(fileId);
+    return link;
+  }
+
+  getMyCourses(instructor_id: number) {
+    return this.client.send(COURSE_MESSAGE_PATTERNS.getMyCourses, {
+      instructor_id,
+    });
   }
 }

@@ -15,4 +15,8 @@ export const COURSE_MESSAGE_PATTERNS = {
     prefix: 'course',
     action: 'upload-video',
   },
+  getMyCourses: {
+    prefix: 'course',
+    action: 'get-my-courses',
+  },
 };

@@ -23,7 +23,7 @@ export class CourseController {
   @UseInterceptors(
     FileFieldsInterceptor([
       { name: 'thumbnail', maxCount: 1 },
-      { name: 'trailer', maxCount: 1 },
+      // { name: 'trailer', maxCount: 1 },
     ]),
   )
   create(
@@ -40,9 +40,22 @@ export class CourseController {
     return this.courseService.create(createCourseDto, files);
   }
 
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'video', maxCount: 1 }]))
   @Post('/upload')
-  upload() {
-    return this.courseService.upload();
+  upload(
+    @UploadedFiles()
+    files: {
+      thumbnail?: Express.Multer.File[];
+    },
+  ) {
+    return this.courseService.upload(files);
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('/get-my-courses')
+  getMyCourses(@Request() request) {
+    const { user } = request;
+    return this.courseService.getMyCourses(user.id);
   }
 
   @Get('')
