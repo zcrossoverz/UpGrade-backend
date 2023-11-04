@@ -3,9 +3,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Category } from './category.entity';
+import { Unit } from './unit.entity';
 
 @Entity()
 export class Course {
@@ -35,4 +40,11 @@ export class Course {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @OneToOne(() => Category, (category) => category.id)
+  @JoinColumn({ name: 'category' })
+  category: Category;
+
+  @OneToMany(() => Unit, (unit) => unit.course)
+  units: Unit[];
 }

@@ -3,4 +3,5 @@ export class CreateCourseDto {
   instructor_id: number;
   thumbnail: string;
   description: string;
+  category: number;
 }

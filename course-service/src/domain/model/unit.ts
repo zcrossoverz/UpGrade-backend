@@ -1,8 +1,11 @@
+import { CourseM } from './course';
+import { TopicM } from './topic';
+
 export class UnitM {
   id: number;
-  course_id: number;
+  course: CourseM;
   title: string;
-  update_history_id: number;
+  topics: TopicM[];
   created_at: Date;
   updated_at: Date;
 }

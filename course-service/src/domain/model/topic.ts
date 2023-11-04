@@ -1,3 +1,5 @@
+import { UnitM } from './unit';
+
 export enum typeTopic {
   POST = 'post',
   VIDEO = 'video',
@@ -7,10 +9,10 @@ export enum typeTopic {
 
 export class TopicM {
   id: number;
-  unit_id: number;
   title: string;
-  type: typeTopic;
-  update_history_id: number;
+  video_url: string;
+  description: string;
+  unit: UnitM;
   created_at: Date;
   updated_at: Date;
 }

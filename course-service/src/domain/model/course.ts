@@ -1,3 +1,6 @@
+import { CategoryM } from './category';
+import { UnitM } from './unit';
+
 export enum typeStatusCourse {
   INIT = 'init',
   DRAFT = 'draft',
@@ -12,7 +15,8 @@ export class CourseM {
   price: number;
   thumbnail_url: string;
   status: typeStatusCourse;
-  //update_history_id: number;
+  category: CategoryM;
+  units: UnitM[];
   created_at: Date;
   updated_at: Date;
 }

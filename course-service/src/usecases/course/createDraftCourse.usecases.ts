@@ -14,12 +14,17 @@ export class CreateDraftCourseUseCases {
     title: string,
     instructor_id: number,
     description: string,
-    thumbnail?: string,
+    thumbnail: string,
+    category: number,
   ): Promise<CourseM> {
     if (!title || !instructor_id)
       throw new RpcException(
         new BadRequestException('Title and instructor id are required'),
       );
+
+    if (!category) {
+      throw new RpcException(new BadRequestException('category are required'));
+    }
 
     if (!thumbnail) {
       throw new RpcException(new BadRequestException('Thumbnail are required'));
@@ -30,6 +35,7 @@ export class CreateDraftCourseUseCases {
       instructor_id,
       description,
       thumbnail,
+      category,
     );
     this.logger.log(
       'creaetDraftCourseUseCases execute',
