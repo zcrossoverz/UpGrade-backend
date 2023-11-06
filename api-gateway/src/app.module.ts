@@ -10,6 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 import configuration from 'config/configuration';
 import { CategoryModule } from './category/category.module';
 import { UnitModule } from './unit/unit.module';
+import { TopicModule } from './topic/topic.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { UnitModule } from './unit/unit.module';
     AuthModule,
     GdriveModule,
     UnitModule,
+    TopicModule,
     ConfigModule.forRoot({
       load: [configuration],
     }),
