@@ -21,6 +21,9 @@ export class Topic {
   video_url: string;
 
   @Column()
+  duration: number;
+
+  @Column()
   description: string;
 
   @ManyToOne(() => Unit, (unit) => unit.topics, {

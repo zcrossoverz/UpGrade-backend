@@ -6,6 +6,7 @@ export interface ITopicRepository {
     description: string,
     video_url: string,
     unit_id: number,
+    duration: number,
   ): Promise<TopicM>;
   getTopic(topic_id: number): Promise<TopicM>;
   getListTopic(unit_id: number): Promise<{

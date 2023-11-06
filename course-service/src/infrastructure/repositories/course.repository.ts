@@ -51,7 +51,9 @@ export class CourseRepository implements ICourseRepository {
       },
       relations: {
         category: true,
-        units: true,
+        units: {
+          topics: true,
+        },
       },
     });
     return result;

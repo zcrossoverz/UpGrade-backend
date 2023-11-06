@@ -4,8 +4,8 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -41,7 +41,7 @@ export class Course {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @OneToOne(() => Category, (category) => category.id)
+  @ManyToOne(() => Category, (category) => category.id)
   @JoinColumn({ name: 'category' })
   category: Category;
 

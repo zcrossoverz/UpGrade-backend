@@ -20,6 +20,7 @@ export class TopicRepository implements ITopicRepository {
     description: string,
     video_url: string,
     unit_id: number,
+    duration: number,
   ): Promise<TopicM> {
     if (!title) {
       throw new RpcException(new BadRequestException('title is required'));
@@ -33,6 +34,7 @@ export class TopicRepository implements ITopicRepository {
     if (!unit_id) {
       throw new RpcException(new BadRequestException('unit id is required'));
     }
+
     const unit = await this.unitRepository.findOneBy({
       id: unit_id,
     });
@@ -43,6 +45,7 @@ export class TopicRepository implements ITopicRepository {
         description,
         video_url,
         unit,
+        duration,
       }),
     );
   }
@@ -59,11 +62,13 @@ export class TopicRepository implements ITopicRepository {
     if (!unit_id) {
       throw new RpcException(new BadRequestException('unit id is required'));
     }
-    const unit = await this.unitRepository.findOneBy({ id: unit_id });
-    if (!unit) {
-      throw new RpcException(new BadRequestException('unit not found'));
-    }
-    const [datas, count] = await this.topicRepository.findAndCountBy({ unit });
+    const [datas, count] = await this.topicRepository.findAndCount({
+      where: {
+        unit: {
+          id: unit_id,
+        },
+      },
+    });
     return {
       datas,
       count,

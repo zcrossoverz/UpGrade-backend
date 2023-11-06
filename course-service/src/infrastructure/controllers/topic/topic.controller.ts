@@ -12,8 +12,8 @@ import { DeleteTopicUseCase } from 'src/usecases/topic/deleteTopic';
 import { GetTopicUseCase } from 'src/usecases/topic/getTopic';
 import { GetListTopicUseCase } from 'src/usecases/topic/getListTopic';
 
-@Controller('unit')
-export class UnitController {
+@Controller()
+export class TopicController {
   constructor(
     @Inject(UsecasesProxyModule.CREATE_TOPIC_USECASES_PROXY)
     private readonly createUsecase: UseCaseProxy<CreateTopicUseCase>,
@@ -35,12 +35,13 @@ export class UnitController {
       description: string;
       video_url: string;
       unit_id: number;
+      duration: number;
     },
   ) {
-    const { title, description, video_url, unit_id } = createDto;
+    const { title, description, video_url, unit_id, duration } = createDto;
     const result = await this.createUsecase
       .getInstance()
-      .excute(title, description, video_url, unit_id);
+      .excute(title, description, video_url, unit_id, duration);
     return result;
   }
 
@@ -63,6 +64,19 @@ export class UnitController {
   @MessagePattern(TOPIC_MESSAGE_PATTERNS.delete)
   async delete(@Payload('id', ParseIntPipe) id: number) {
     const result = await this.deleteUsecase.getInstance().excute(id);
+    return result;
+  }
+
+  @MessagePattern(TOPIC_MESSAGE_PATTERNS.getOne)
+  async getOne(@Payload('id', ParseIntPipe) id: number) {
+    const result = await this.getOneUsecase.getInstance().excute(id);
+    return result;
+  }
+
+  @MessagePattern(TOPIC_MESSAGE_PATTERNS.getList)
+  async getList(@Payload() query: { unit_id: number }) {
+    const { unit_id } = query;
+    const result = await this.getListUsecase.getInstance().excute(unit_id);
     return result;
   }
 }
