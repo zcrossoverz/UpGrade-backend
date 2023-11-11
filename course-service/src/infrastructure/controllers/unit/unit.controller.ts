@@ -22,11 +22,18 @@ export class UnitController {
   ) {}
 
   @MessagePattern(UNIT_MESSAGE_PATTERNS.create)
-  async create(@Payload() createDto: { title: string; course_id: number }) {
-    const { title, course_id } = createDto;
+  async create(
+    @Payload()
+    createDto: {
+      title: string;
+      course_id: number;
+      drive_folder_unit_id: string;
+    },
+  ) {
+    const { title, course_id, drive_folder_unit_id } = createDto;
     const result = await this.createUsecase
       .getInstance()
-      .excute(title, course_id);
+      .excute(title, course_id, drive_folder_unit_id);
     return result;
   }
 

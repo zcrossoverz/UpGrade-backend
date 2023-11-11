@@ -21,6 +21,7 @@ export class TopicRepository implements ITopicRepository {
     video_url: string,
     unit_id: number,
     duration: number,
+    file_id: string,
   ): Promise<TopicM> {
     if (!title) {
       throw new RpcException(new BadRequestException('title is required'));
@@ -46,6 +47,7 @@ export class TopicRepository implements ITopicRepository {
         video_url,
         unit,
         duration,
+        file_id,
       }),
     );
   }
@@ -73,6 +75,16 @@ export class TopicRepository implements ITopicRepository {
       datas,
       count,
     };
+  }
+
+  async getFolderDriveId(unit_id: number) {
+    const result = await this.unitRepository.findOne({
+      where: {
+        id: unit_id,
+      },
+    });
+
+    return result.drive_folder_unit_id;
   }
   async update(
     id: number,

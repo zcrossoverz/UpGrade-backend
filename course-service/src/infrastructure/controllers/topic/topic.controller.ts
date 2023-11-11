@@ -36,12 +36,14 @@ export class TopicController {
       video_url: string;
       unit_id: number;
       duration: number;
+      file_id: string;
     },
   ) {
-    const { title, description, video_url, unit_id, duration } = createDto;
+    const { title, description, video_url, unit_id, duration, file_id } =
+      createDto;
     const result = await this.createUsecase
       .getInstance()
-      .excute(title, description, video_url, unit_id, duration);
+      .excute(title, description, video_url, unit_id, duration, file_id);
     return result;
   }
 

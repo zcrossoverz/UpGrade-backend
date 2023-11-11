@@ -26,6 +26,11 @@ import { GetTopicUseCase } from 'src/usecases/topic/getTopic';
 import { GetListTopicUseCase } from 'src/usecases/topic/getListTopic';
 import { UpdateTopicUseCase } from 'src/usecases/topic/updateTopic';
 import { DeleteTopicUseCase } from 'src/usecases/topic/deleteTopic';
+import { ApprovalRequestRepository } from '../repositories/approvalRequest.repository';
+import { SubmitApprovalUseCases } from 'src/usecases/approvalRequest/submitApproval';
+import { ProcessApprovalUseCases } from 'src/usecases/approvalRequest/approvalProcess';
+import { GetListApprovalUseCases } from 'src/usecases/approvalRequest/getList';
+import { DeleteCourseUseCase } from 'src/usecases/course/deleteCourse';
 
 export class UseCaseProxy<T> {
   constructor(private readonly useCase: T) {}
@@ -64,6 +69,14 @@ export class UsecasesProxyModule {
   static GET_TOPIC_USECASES_PROXY = 'getTopicUsecasesProxy';
   static GETLIST_TOPIC_USECASES_PROXY = 'getListTopicUsecasesProxy';
   static DELETE_TOPIC_USECASES_PROXY = 'deleteTopicUsecasesProxy';
+
+  // approval request
+  static GET_LIST_APPROVAL_REQUEST_USECASES_PROXY =
+    'getListApprovalRequestUsecasesProxy';
+  static CREATE_APPROVAL_REQUEST_USECASES_PROXY =
+    'postApprovalRequestUsecasesProxy';
+  static PROCESS_APPROVAL_REQUEST_USECASES_PROXY =
+    'processApprovalRequestUsecasesProxy';
 
   static USE_CASE_PROXY_MAP: {
     provide: string;
@@ -107,6 +120,12 @@ export class UsecasesProxyModule {
       provide: UsecasesProxyModule.GET_MY_COURSES_USECASES_PROXY,
       useFactory: (logger: LoggerService, courseRepository: CourseRepository) =>
         new UseCaseProxy(new GetMyCoursesUseCase(logger, courseRepository)),
+      inject: [LoggerService, CourseRepository],
+    },
+    {
+      provide: UsecasesProxyModule.DELETE_COURSE_USECASES_PROXY,
+      useFactory: (logger: LoggerService, courseRepository: CourseRepository) =>
+        new UseCaseProxy(new DeleteCourseUseCase(logger, courseRepository)),
       inject: [LoggerService, CourseRepository],
     },
 
@@ -206,6 +225,33 @@ export class UsecasesProxyModule {
       useFactory: (logger: LoggerService, topicRepository: TopicRepository) =>
         new UseCaseProxy(new DeleteTopicUseCase(logger, topicRepository)),
       inject: [LoggerService, TopicRepository],
+    },
+
+    // approval request
+
+    {
+      provide: UsecasesProxyModule.CREATE_APPROVAL_REQUEST_USECASES_PROXY,
+      useFactory: (
+        logger: LoggerService,
+        repository: ApprovalRequestRepository,
+      ) => new UseCaseProxy(new SubmitApprovalUseCases(logger, repository)),
+      inject: [LoggerService, ApprovalRequestRepository],
+    },
+    {
+      provide: UsecasesProxyModule.PROCESS_APPROVAL_REQUEST_USECASES_PROXY,
+      useFactory: (
+        logger: LoggerService,
+        repository: ApprovalRequestRepository,
+      ) => new UseCaseProxy(new ProcessApprovalUseCases(logger, repository)),
+      inject: [LoggerService, ApprovalRequestRepository],
+    },
+    {
+      provide: UsecasesProxyModule.GET_LIST_APPROVAL_REQUEST_USECASES_PROXY,
+      useFactory: (
+        logger: LoggerService,
+        repository: ApprovalRequestRepository,
+      ) => new UseCaseProxy(new GetListApprovalUseCases(logger, repository)),
+      inject: [LoggerService, ApprovalRequestRepository],
     },
   ];
 

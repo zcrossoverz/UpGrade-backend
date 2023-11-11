@@ -8,7 +8,9 @@ export class GetListTopicUseCase {
   ) {}
 
   async excute(unit_id: number) {
-    const result = this.topicRepository.getListTopic(unit_id);
-    return result;
+    const drive_folder_unit_id =
+      await this.topicRepository.getFolderDriveId(unit_id);
+    const result = await this.topicRepository.getListTopic(unit_id);
+    return { ...result, drive_folder_unit_id };
   }
 }

@@ -19,4 +19,8 @@ export const COURSE_MESSAGE_PATTERNS = {
     prefix: 'course',
     action: 'get-my-courses',
   },
+  delete: {
+    prefix: 'course',
+    action: 'delete',
+  },
 };

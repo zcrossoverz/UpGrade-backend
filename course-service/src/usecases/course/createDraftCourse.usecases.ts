@@ -16,6 +16,7 @@ export class CreateDraftCourseUseCases {
     description: string,
     thumbnail: string,
     category: number,
+    drive_folder_id: string,
   ): Promise<CourseM> {
     if (!title || !instructor_id)
       throw new RpcException(
@@ -36,6 +37,7 @@ export class CreateDraftCourseUseCases {
       description,
       thumbnail,
       category,
+      drive_folder_id,
     );
     this.logger.log(
       'creaetDraftCourseUseCases execute',

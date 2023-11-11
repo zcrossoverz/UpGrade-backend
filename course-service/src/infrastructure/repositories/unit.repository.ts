@@ -15,7 +15,11 @@ export class UnitRepository implements IUnitRepository {
     @InjectRepository(Course)
     private readonly courseRepository: Repository<Course>,
   ) {}
-  async create(title: string, course_id: number): Promise<UnitM> {
+  async create(
+    title: string,
+    course_id: number,
+    drive_folder_unit_id: string,
+  ): Promise<UnitM> {
     if (!course_id) {
       throw new RpcException(new BadRequestException('course_id is required'));
     }
@@ -32,6 +36,7 @@ export class UnitRepository implements IUnitRepository {
       this.unitRepository.create({
         title,
         course,
+        drive_folder_unit_id,
       }),
     );
 

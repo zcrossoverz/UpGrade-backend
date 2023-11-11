@@ -7,8 +7,12 @@ export class CreateUnitUseCase {
     private readonly unitRepository: IUnitRepository,
   ) {}
 
-  async excute(title: string, course_id: number) {
-    const result = this.unitRepository.create(title, course_id);
+  async excute(title: string, course_id: number, drive_folder_unit_id: string) {
+    const result = this.unitRepository.create(
+      title,
+      course_id,
+      drive_folder_unit_id,
+    );
     return result;
   }
 }

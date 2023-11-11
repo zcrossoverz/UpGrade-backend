@@ -4,6 +4,8 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -11,6 +13,7 @@ import {
 } from 'typeorm';
 import { Category } from './category.entity';
 import { Unit } from './unit.entity';
+import { Member } from './member.entity';
 
 @Entity()
 export class Course {
@@ -33,6 +36,15 @@ export class Course {
   thumbnail_url: string;
 
   @Column()
+  drive_folder_id: string;
+
+  @Column()
+  members_count: number;
+
+  @Column({ nullable: true })
+  members_id: number;
+
+  @Column()
   status: typeStatusCourse;
 
   @CreateDateColumn()
@@ -47,4 +59,8 @@ export class Course {
 
   @OneToMany(() => Unit, (unit) => unit.course)
   units: Unit[];
+
+  @ManyToMany(() => Member)
+  @JoinTable()
+  members: Member[];
 }

@@ -13,6 +13,7 @@ export class CreateTopicUseCase {
     video_url: string,
     unit_id: number,
     duration: number,
+    file_id: string,
   ) {
     const result = this.topicRepository.create(
       title,
@@ -20,6 +21,7 @@ export class CreateTopicUseCase {
       video_url,
       unit_id,
       duration,
+      file_id,
     );
 
     return result;

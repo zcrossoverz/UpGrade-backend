@@ -15,6 +15,15 @@ export class CourseRepository implements ICourseRepository {
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
   ) {}
+  async update(course_id: number, data: any): Promise<boolean> {
+    const result = await this.courseRepository.update(course_id, { ...data });
+    return result.affected > 0;
+  }
+
+  async delete(id: number): Promise<boolean> {
+    const result = await this.courseRepository.delete(id);
+    return result.affected > 0;
+  }
 
   async create(
     title: string,
@@ -22,6 +31,7 @@ export class CourseRepository implements ICourseRepository {
     description: string,
     thumbnail_url: string,
     category: number,
+    drive_folder_id: string,
   ): Promise<CourseM> {
     const categorySelect = await this.categoryRepository.findOneBy({
       id: category,
@@ -40,6 +50,8 @@ export class CourseRepository implements ICourseRepository {
         thumbnail_url: thumbnail_url,
         status: typeStatusCourse.DRAFT,
         category: categorySelect,
+        drive_folder_id,
+        members_count: 0,
       }),
     );
     return result;

@@ -11,6 +11,7 @@ import { GetListCoursesUseCase } from 'src/usecases/course/getListCourses.usecas
 import { UploadVideoCoursesUseCase } from 'src/usecases/course/uploadVideo.usecases';
 import { COURSE_MESSAGE_PATTERNS } from './messagePattern';
 import { GetMyCoursesUseCase } from 'src/usecases/course/getMyCourses';
+import { DeleteCourseUseCase } from 'src/usecases/course/deleteCourse';
 
 @Controller('course')
 export class CourseController {
@@ -25,18 +26,33 @@ export class CourseController {
     private readonly uploadVideoUsecaseProxy: UseCaseProxy<UploadVideoCoursesUseCase>,
     @Inject(UsecasesProxyModule.GET_MY_COURSES_USECASES_PROXY)
     private readonly getMyCoursesUsecaseProxy: UseCaseProxy<GetMyCoursesUseCase>,
+    @Inject(UsecasesProxyModule.DELETE_COURSE_USECASES_PROXY)
+    private readonly deleteCoursesUsecaseProxy: UseCaseProxy<DeleteCourseUseCase>,
   ) {}
 
   @MessagePattern(COURSE_MESSAGE_PATTERNS.create)
   async createCourse(@Payload() createCourseDto: CreateCourseDto) {
-    const { title, instructor_id, thumbnail, description, category } =
-      createCourseDto;
+    const {
+      title,
+      instructor_id,
+      thumbnail,
+      description,
+      category,
+      drive_folder_id,
+    } = createCourseDto;
 
     // console.log(thumbnail, trailer, title, instructor_id);
 
     const course = await this.createCourseUsecasesProxy
       .getInstance()
-      .excute(title, instructor_id, description, thumbnail, category);
+      .excute(
+        title,
+        instructor_id,
+        description,
+        thumbnail,
+        category,
+        drive_folder_id,
+      );
     return course;
   }
 
@@ -65,6 +81,14 @@ export class CourseController {
     const result = await this.getMyCoursesUsecaseProxy
       .getInstance()
       .excute(instructor_id);
+    return result;
+  }
+
+  @MessagePattern(COURSE_MESSAGE_PATTERNS.delete)
+  async deleteCourses(@Payload('course_id', ParseIntPipe) course_id: number) {
+    const result = await this.deleteCoursesUsecaseProxy
+      .getInstance()
+      .excute(course_id);
     return result;
   }
 }

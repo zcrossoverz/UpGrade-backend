@@ -4,4 +4,5 @@ export class CreateCourseDto {
   thumbnail: string;
   description: string;
   category: number;
+  drive_folder_id: string;
 }
