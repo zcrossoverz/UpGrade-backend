@@ -8,7 +8,14 @@ export class UnitController {
 
   @UseGuards(AuthGuard)
   @Post('/create')
-  create(@Body() createDto: { title: string; course_id: number }) {
+  create(
+    @Body()
+    createDto: {
+      title: string;
+      course_id: number;
+      drive_folder_id: string;
+    },
+  ) {
     return this.unitService.create(createDto);
   }
 

@@ -1,4 +1,9 @@
-import { Injectable, Inject, StreamableFile } from '@nestjs/common';
+import {
+  Injectable,
+  Inject,
+  StreamableFile,
+  BadRequestException,
+} from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { TOPIC_MESSAGE_PATTERNS } from './messagePattern';
 import { GDrive } from 'src/common/gdrive/gdrive';
@@ -16,30 +21,33 @@ export class TopicService {
       title: string;
       description: string;
       unit_id: number;
+      drive_folder_unit_id: string;
     },
     files: any,
   ) {
     const video = files.video[0];
-    const folder = await this.gdrive.createFolderIfNotExist('test video');
 
     const streamAbleFile = new StreamableFile(Buffer.from(video.buffer));
     const readStream = streamAbleFile.getStream();
     const duration = Math.round(await getVideoDurationInSeconds(readStream));
 
-    console.log(duration, 'duration');
-
     const uploadVideo = await this.gdrive.uploadVideoResumable(
-      folder,
-      'content',
+      createDto.drive_folder_unit_id,
+      createDto.title,
       video,
     );
 
+    if (JSON.stringify(uploadVideo).length > 50) {
+      console.log(uploadVideo);
+      throw new BadRequestException('video upload failed');
+    }
     const video_url = await this.gdrive.getLinkVideo(uploadVideo);
 
     return this.client.send(TOPIC_MESSAGE_PATTERNS.create, {
       ...createDto,
       video_url,
       duration,
+      file_id: uploadVideo,
     });
   }
 
@@ -63,5 +71,13 @@ export class TopicService {
 
   async getList(query: { unit_id: number }) {
     return this.client.send(TOPIC_MESSAGE_PATTERNS.getList, { ...query });
+  }
+
+  async getCodeDrive() {
+    return this.gdrive.getCode();
+  }
+
+  async getCredentials() {
+    return this.gdrive.getCredentials();
   }
 }

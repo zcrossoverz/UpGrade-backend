@@ -13,7 +13,8 @@ export class AllExceptionFilter implements ExceptionFilter {
       statusCode: status,
       message:
         exception.response?.information?.message ||
-        exception.response?.information?.detail,
+        exception.response?.information?.detail ||
+        exception.response?.message,
       detail: exception.response,
       timestamp: new Date().toISOString(),
       path: request.url,

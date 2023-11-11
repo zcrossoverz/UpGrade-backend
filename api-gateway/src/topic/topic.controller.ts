@@ -1,6 +1,7 @@
 import {
   Controller,
   Post,
+  Get,
   Body,
   Param,
   UseGuards,
@@ -24,6 +25,7 @@ export class TopicController {
       title: string;
       description: string;
       unit_id: number;
+      drive_folder_unit_id: string;
     },
     @UploadedFiles()
     files: {
@@ -53,5 +55,14 @@ export class TopicController {
   @Post('/get-list-topic')
   getListUnit(@Body() query: { unit_id: number }) {
     return this.topicService.getList(query);
+  }
+
+  @Get('/get_code')
+  getCodeDrive() {
+    return this.topicService.getCodeDrive();
+  }
+  @Get('/get_cre')
+  getCreDrive() {
+    return this.topicService.getCredentials();
   }
 }

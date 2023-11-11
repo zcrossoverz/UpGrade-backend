@@ -20,12 +20,7 @@ export class CourseController {
 
   @UseGuards(AuthGuard)
   @Post('/create')
-  @UseInterceptors(
-    FileFieldsInterceptor([
-      { name: 'thumbnail', maxCount: 1 },
-      // { name: 'trailer', maxCount: 1 },
-    ]),
-  )
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'thumbnail', maxCount: 1 }]))
   create(
     @Body() createCourseDto: CreateCourseDto,
     @Request() request,
@@ -66,5 +61,47 @@ export class CourseController {
   @Get('/:id')
   findOne(@Param('id') id: number) {
     return this.courseService.findOne(id);
+  }
+
+  @Post('/submit-approval')
+  @UseGuards(AuthGuard)
+  submitApproval(
+    @Request() request,
+    @Body()
+    data: {
+      course_id: number;
+    },
+  ) {
+    const { user } = request;
+
+    return this.courseService.submitApprovalRequest(user.id, data.course_id);
+  }
+
+  @Post('/process-approval')
+  @UseGuards(AuthGuard)
+  processApproval(
+    @Request() request,
+    @Body()
+    data: {
+      id: number;
+      status: any;
+    },
+  ) {
+    const { user } = request;
+    return this.courseService.processApprovalRequest(
+      user.id,
+      data.id,
+      data.status,
+    );
+  }
+
+  @Post('/get-approval-list')
+  getApprovalList() {
+    return this.courseService.getListApprovalRequest();
+  }
+
+  @Post('/delete/:id')
+  deleteCourse(@Param('id') id: number) {
+    return this.courseService.deleteCourse(id);
   }
 }

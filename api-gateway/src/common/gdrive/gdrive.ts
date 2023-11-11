@@ -50,7 +50,10 @@ export class GDrive {
       'gdrive.apikey',
     )}`;
   }
-  async createFolderIfNotExist(folderName: string): Promise<any> {
+  async createFolderIfNotExist(
+    folderName: string,
+    parents?: string,
+  ): Promise<any> {
     try {
       // Check if the folder exists
       const folderQuery = `'${this.upgradeFolderId}' in parents and name='${folderName}' and mimeType='application/vnd.google-apps.folder'`;
@@ -65,7 +68,7 @@ export class GDrive {
         const folderMetadata = {
           name: folderName,
           mimeType: 'application/vnd.google-apps.folder',
-          parents: [this.upgradeFolderId],
+          parents: [parents !== undefined ? parents : this.upgradeFolderId],
         };
 
         const newFolder = await this.drive.files.create({
@@ -180,7 +183,7 @@ export class GDrive {
 
   async getCredentials(): Promise<any> {
     const code =
-      '4/0AfJohXkrY3b9yraYsJX5PoQBV5VvxoqVQbalEYISq_0xaYwI-1VuwsXYurS0l4X1Vguj4w';
+      '4/0AfJohXl-hOLiy4WSNt62E-rmBzYNviXNUphAiuCdBeXVS7uhvuYwqdOreULqBZI--a13QA';
 
     const { tokens } = await this.oauth2Client.getToken(code);
     this.oauth2Client.setCredentials(tokens);

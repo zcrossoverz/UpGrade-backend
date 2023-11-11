@@ -1,9 +1,18 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { CreateCourseDto } from './dto/create-course.dto';
-import { COURSE_MESSAGE_PATTERNS } from './messagePattern';
+import {
+  APPROVAL_REQUEST_MESSAGE_PATTERNS,
+  COURSE_MESSAGE_PATTERNS,
+} from './messagePattern';
 import { ClientProxy } from '@nestjs/microservices';
 import { GDrive } from 'src/common/gdrive/gdrive';
 import * as crypto from 'crypto';
+
+enum enumApprovalStatus {
+  PENDING = 'Pending',
+  APPROVED = 'Approved',
+  REJECTED = 'Rejected',
+}
 
 @Injectable()
 export class CourseService {
@@ -15,7 +24,9 @@ export class CourseService {
   async create(createCourseDto: CreateCourseDto, files: any) {
     const thumbnail = files.thumbnail[0];
 
-    const folderName = `${crypto.randomUUID()}_${new Date().getTime()}`;
+    const folderName = `${
+      createCourseDto.title
+    }_${new Date().getTime()}_${crypto.randomUUID()}`;
     const folder = await this.gdrive.createFolderIfNotExist(folderName);
 
     const nameThumbnail = 'thumbnail.png';
@@ -30,6 +41,7 @@ export class CourseService {
 
     return this.client.send(COURSE_MESSAGE_PATTERNS.create, {
       ...createCourseDto,
+      drive_folder_id: folder,
       thumbnail: thumbnailUrl,
     });
   }
@@ -59,5 +71,41 @@ export class CourseService {
     return this.client.send(COURSE_MESSAGE_PATTERNS.getMyCourses, {
       instructor_id,
     });
+  }
+
+  async deleteCourse(course_id: number) {
+    return this.client.send(COURSE_MESSAGE_PATTERNS.delete, { course_id });
+  }
+
+  submitApprovalRequest(instructor_id: number, course_id: number) {
+    return this.client.send(
+      APPROVAL_REQUEST_MESSAGE_PATTERNS.submitApprovalRequest,
+      {
+        instructor_id,
+        course_id,
+      },
+    );
+  }
+
+  processApprovalRequest(
+    approver_id: number,
+    id: number,
+    status: enumApprovalStatus,
+  ) {
+    return this.client.send(
+      APPROVAL_REQUEST_MESSAGE_PATTERNS.processApprovalRequest,
+      {
+        approver_id,
+        id,
+        status,
+      },
+    );
+  }
+
+  getListApprovalRequest() {
+    return this.client.send(
+      APPROVAL_REQUEST_MESSAGE_PATTERNS.getListApprovalRequest,
+      {},
+    );
   }
 }
