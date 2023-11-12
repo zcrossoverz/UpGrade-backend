@@ -17,11 +17,13 @@ export class AuthGuard implements CanActivate {
     if (!token) throw new UnauthorizedException('Unauthorized!');
 
     const data = await this.authService.validateToken(token);
-    const { id, role, isActive } = data;
+    const { id, role, isActive, firstName, lastName } = data;
     request.user = {
       id,
       isActive,
       role,
+      firstName,
+      lastName,
     };
 
     return id ? (isActive ? true : false) : false;

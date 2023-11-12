@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { MESSAGE_PATTERNS_AUTH } from './messagePattern';
 import { Cache } from 'cache-manager';
@@ -16,6 +16,7 @@ export class AuthService {
   }
 
   async validateToken(token: string) {
+    if (!token) throw new UnauthorizedException('Unauthorized!');
     const cacheResult = await this.cacheManager.get(
       token.replace('Bearer ', 'SESSION_'),
     );

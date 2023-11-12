@@ -53,6 +53,21 @@ export class CourseController {
     return this.courseService.getMyCourses(user.id);
   }
 
+  @UseGuards(AuthGuard)
+  @Post('/update')
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'thumbnail', maxCount: 1 }]))
+  update(
+    @Body()
+    data: {
+      description: string;
+      price: number;
+      status: string;
+      course_id: number;
+    },
+  ) {
+    return this.courseService.updateCourse(data.course_id, { ...data });
+  }
+
   @Get('')
   findAll() {
     return this.courseService.getList();
@@ -73,11 +88,10 @@ export class CourseController {
     },
   ) {
     const { user } = request;
-
     return this.courseService.submitApprovalRequest(
       user.id,
       data.course_id,
-      user.username,
+      user.firstName + ' ' + user.lastName,
     );
   }
 
@@ -96,6 +110,7 @@ export class CourseController {
       user.id,
       data.id,
       data.status,
+      `${user.firstName} ${user.lastName}`,
     );
   }
 

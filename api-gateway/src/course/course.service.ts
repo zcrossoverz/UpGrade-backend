@@ -96,6 +96,7 @@ export class CourseService {
     approver_id: number,
     id: number,
     status: enumApprovalStatus,
+    approver_fullname: string,
   ) {
     return this.client.send(
       APPROVAL_REQUEST_MESSAGE_PATTERNS.processApprovalRequest,
@@ -103,6 +104,7 @@ export class CourseService {
         approver_id,
         id,
         status,
+        approver_fullname,
       },
     );
   }
@@ -112,5 +114,19 @@ export class CourseService {
       APPROVAL_REQUEST_MESSAGE_PATTERNS.getListApprovalRequest,
       {},
     );
+  }
+
+  updateCourse(
+    course_id: number,
+    data: {
+      description?: string;
+      price?: number;
+      status?: string;
+    },
+  ) {
+    return this.client.send(COURSE_MESSAGE_PATTERNS.update, {
+      course_id,
+      data,
+    });
   }
 }
