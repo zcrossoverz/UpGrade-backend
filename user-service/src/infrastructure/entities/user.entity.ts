@@ -28,6 +28,9 @@ export class User {
   lastName: string;
 
   @Column({ nullable: true })
+  avatar: string;
+
+  @Column({ nullable: true })
   bio: string;
 
   @Column({ enum: ROLE, default: ROLE.USER })

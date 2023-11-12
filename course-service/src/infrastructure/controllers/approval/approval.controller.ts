@@ -29,12 +29,13 @@ export class ApprovalRequestController {
     createDto: {
       course_id: number;
       instructor_id: number;
+      instructor_username: string;
     },
   ) {
-    const { course_id, instructor_id } = createDto;
+    const { course_id, instructor_id, instructor_username } = createDto;
     const result = await this.submmitApprovalUsecase
       .getInstance()
-      .excute(course_id, instructor_id);
+      .excute(course_id, instructor_id, instructor_username);
     return result;
   }
 

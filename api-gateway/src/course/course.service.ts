@@ -77,12 +77,17 @@ export class CourseService {
     return this.client.send(COURSE_MESSAGE_PATTERNS.delete, { course_id });
   }
 
-  submitApprovalRequest(instructor_id: number, course_id: number) {
+  submitApprovalRequest(
+    instructor_id: number,
+    course_id: number,
+    instructor_username: string,
+  ) {
     return this.client.send(
       APPROVAL_REQUEST_MESSAGE_PATTERNS.submitApprovalRequest,
       {
         instructor_id,
         course_id,
+        instructor_username,
       },
     );
   }

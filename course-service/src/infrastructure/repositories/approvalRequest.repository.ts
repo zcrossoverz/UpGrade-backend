@@ -22,6 +22,7 @@ export class ApprovalRequestRepository implements IApprovalRequestRepository {
   async create(
     instructor_id: number,
     course_id: number,
+    instructor_username: string,
   ): Promise<ApprovalRequestM> {
     if (!instructor_id || !course_id) {
       throw new RpcException(
@@ -29,10 +30,20 @@ export class ApprovalRequestRepository implements IApprovalRequestRepository {
       );
     }
 
+    const course = await this.courseRepository.findOne({
+      where: {
+        id: course_id,
+      },
+    });
+    if (!course)
+      throw new RpcException(new BadRequestException('Course not found'));
+
     const result = await this.approvalRequestRepository.save(
       this.approvalRequestRepository.create({
         instructor_id,
         course_id,
+        course_title: course.title,
+        instructor_username,
       }),
     );
     await this.courseRepository.update(

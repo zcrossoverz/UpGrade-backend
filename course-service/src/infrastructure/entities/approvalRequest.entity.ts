@@ -18,6 +18,15 @@ export class ApprovalRequest {
   @Column()
   course_id: number;
 
+  @Column({ nullable: true })
+  course_title: string;
+
+  @Column({ nullable: true })
+  approvar_username: string;
+
+  @Column({ nullable: true })
+  instructor_username: string;
+
   @Column({
     nullable: true,
   })

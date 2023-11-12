@@ -74,7 +74,11 @@ export class CourseController {
   ) {
     const { user } = request;
 
-    return this.courseService.submitApprovalRequest(user.id, data.course_id);
+    return this.courseService.submitApprovalRequest(
+      user.id,
+      data.course_id,
+      user.username,
+    );
   }
 
   @Post('/process-approval')

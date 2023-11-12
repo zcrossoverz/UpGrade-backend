@@ -8,8 +8,11 @@ export class ApprovalRequestM {
   id: number;
   course_id: number;
   instructor_id: number;
+  course_title: string;
+  instructor_username: string;
   status: enumApprovalStatus;
   approver_id: number;
+  approvar_username: string;
   created_at: Date;
   updated_at: Date;
 }

@@ -13,13 +13,18 @@ export class SubmitApprovalUseCases {
   async excute(
     course_id: number,
     instructor_id: number,
+    instructor_username: string,
   ): Promise<ApprovalRequestM> {
     if (!course_id || !instructor_id) {
       throw new RpcException(
         new BadRequestException('Course id and lecturer id are required'),
       );
     }
-    const result = await this.repository.create(instructor_id, course_id);
+    const result = await this.repository.create(
+      instructor_id,
+      course_id,
+      instructor_username,
+    );
     return result;
   }
 }
