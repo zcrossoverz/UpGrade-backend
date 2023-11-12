@@ -31,6 +31,7 @@ import { SubmitApprovalUseCases } from 'src/usecases/approvalRequest/submitAppro
 import { ProcessApprovalUseCases } from 'src/usecases/approvalRequest/approvalProcess';
 import { GetListApprovalUseCases } from 'src/usecases/approvalRequest/getList';
 import { DeleteCourseUseCase } from 'src/usecases/course/deleteCourse';
+import { UpdateCoursesUseCase } from 'src/usecases/course/updateCourse';
 
 export class UseCaseProxy<T> {
   constructor(private readonly useCase: T) {}
@@ -126,6 +127,12 @@ export class UsecasesProxyModule {
       provide: UsecasesProxyModule.DELETE_COURSE_USECASES_PROXY,
       useFactory: (logger: LoggerService, courseRepository: CourseRepository) =>
         new UseCaseProxy(new DeleteCourseUseCase(logger, courseRepository)),
+      inject: [LoggerService, CourseRepository],
+    },
+    {
+      provide: UsecasesProxyModule.UPDATE_COURSE_USER_USECASES_PROXY,
+      useFactory: (logger: LoggerService, courseRepository: CourseRepository) =>
+        new UseCaseProxy(new UpdateCoursesUseCase(logger, courseRepository)),
       inject: [LoggerService, CourseRepository],
     },
 

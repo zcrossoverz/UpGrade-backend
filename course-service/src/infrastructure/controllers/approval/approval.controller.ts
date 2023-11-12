@@ -46,12 +46,13 @@ export class ApprovalRequestController {
       id: number;
       approver_id: number;
       status: enumApprovalStatus;
+      approver_fullname: string;
     },
   ) {
-    const { id, approver_id, status } = updateDto;
+    const { id, approver_id, status, approver_fullname } = updateDto;
     const result = await this.processApprovalUsecase
       .getInstance()
-      .excute(id, approver_id, status);
+      .excute(id, approver_id, status, approver_fullname);
     return result;
   }
 

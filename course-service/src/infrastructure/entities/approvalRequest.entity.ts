@@ -22,7 +22,7 @@ export class ApprovalRequest {
   course_title: string;
 
   @Column({ nullable: true })
-  approvar_username: string;
+  approver_fullname: string;
 
   @Column({ nullable: true })
   instructor_username: string;

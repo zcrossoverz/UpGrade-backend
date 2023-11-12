@@ -12,6 +12,7 @@ import { UploadVideoCoursesUseCase } from 'src/usecases/course/uploadVideo.useca
 import { COURSE_MESSAGE_PATTERNS } from './messagePattern';
 import { GetMyCoursesUseCase } from 'src/usecases/course/getMyCourses';
 import { DeleteCourseUseCase } from 'src/usecases/course/deleteCourse';
+import { UpdateCoursesUseCase } from 'src/usecases/course/updateCourse';
 
 @Controller('course')
 export class CourseController {
@@ -28,6 +29,8 @@ export class CourseController {
     private readonly getMyCoursesUsecaseProxy: UseCaseProxy<GetMyCoursesUseCase>,
     @Inject(UsecasesProxyModule.DELETE_COURSE_USECASES_PROXY)
     private readonly deleteCoursesUsecaseProxy: UseCaseProxy<DeleteCourseUseCase>,
+    @Inject(UsecasesProxyModule.UPDATE_COURSE_USER_USECASES_PROXY)
+    private readonly updateCoursesUsecaseProxy: UseCaseProxy<UpdateCoursesUseCase>,
   ) {}
 
   @MessagePattern(COURSE_MESSAGE_PATTERNS.create)
@@ -89,6 +92,17 @@ export class CourseController {
     const result = await this.deleteCoursesUsecaseProxy
       .getInstance()
       .excute(course_id);
+    return result;
+  }
+
+  @MessagePattern(COURSE_MESSAGE_PATTERNS.update)
+  async updateCourse(
+    @Payload()
+    data: any,
+  ) {
+    const result = await this.updateCoursesUsecaseProxy
+      .getInstance()
+      .excute(data.course_id, { ...data.data });
     return result;
   }
 }

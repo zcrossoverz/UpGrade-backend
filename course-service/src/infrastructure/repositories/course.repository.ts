@@ -16,6 +16,7 @@ export class CourseRepository implements ICourseRepository {
     private readonly categoryRepository: Repository<Category>,
   ) {}
   async update(course_id: number, data: any): Promise<boolean> {
+    delete data.course_id;
     const result = await this.courseRepository.update(course_id, { ...data });
     return result.affected > 0;
   }

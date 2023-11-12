@@ -23,4 +23,8 @@ export const COURSE_MESSAGE_PATTERNS = {
     prefix: 'course',
     action: 'delete',
   },
+  update: {
+    prefix: 'course',
+    action: 'update',
+  },
 };

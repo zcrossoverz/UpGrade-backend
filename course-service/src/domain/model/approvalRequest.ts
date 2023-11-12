@@ -12,7 +12,7 @@ export class ApprovalRequestM {
   instructor_username: string;
   status: enumApprovalStatus;
   approver_id: number;
-  approvar_username: string;
+  approver_fullname: string;
   created_at: Date;
   updated_at: Date;
 }

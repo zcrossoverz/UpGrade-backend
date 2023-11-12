@@ -14,6 +14,7 @@ export class ProcessApprovalUseCases {
     id: number,
     approver_id: number,
     status: enumApprovalStatus,
+    approver_fullname: string,
   ): Promise<boolean> {
     if (!id || !approver_id || !status) {
       throw new RpcException(
@@ -21,7 +22,11 @@ export class ProcessApprovalUseCases {
       );
     }
 
-    const result = await this.repository.update(id, { approver_id, status });
+    const result = await this.repository.update(id, {
+      approver_id,
+      status,
+      approver_fullname,
+    });
     return result;
   }
 }
