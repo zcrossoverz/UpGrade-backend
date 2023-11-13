@@ -16,13 +16,14 @@ export class CourseM {
   title: string;
   description: string;
   instructor_id: number;
+  instructor_fullname: string;
   price: number;
   thumbnail_url: string;
   drive_folder_id: string;
   status: typeStatusCourse;
   category: CategoryM;
   units: UnitM[];
-  // members_id?: number[];
+  members_id?: number[];
   members_count: number;
   created_at: Date;
   updated_at: Date;

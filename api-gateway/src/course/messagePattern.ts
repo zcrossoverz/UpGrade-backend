@@ -27,6 +27,10 @@ export const COURSE_MESSAGE_PATTERNS = {
     prefix: 'course',
     action: 'update',
   },
+  enroll: {
+    prefix: 'course',
+    action: 'enroll',
+  },
 };
 
 export const APPROVAL_REQUEST_MESSAGE_PATTERNS = {

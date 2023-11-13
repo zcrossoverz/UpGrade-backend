@@ -46,8 +46,10 @@ export class CourseService {
     });
   }
 
-  getList() {
-    return this.client.send(COURSE_MESSAGE_PATTERNS.getList, {});
+  getList(filter) {
+    return this.client.send(COURSE_MESSAGE_PATTERNS.getList, {
+      ...filter,
+    });
   }
 
   findOne(id: number) {
@@ -127,6 +129,13 @@ export class CourseService {
     return this.client.send(COURSE_MESSAGE_PATTERNS.update, {
       course_id,
       data,
+    });
+  }
+
+  enrollCourse(course_id: number, user_id: number) {
+    return this.client.send(COURSE_MESSAGE_PATTERNS.enroll, {
+      course_id,
+      user_id,
     });
   }
 }

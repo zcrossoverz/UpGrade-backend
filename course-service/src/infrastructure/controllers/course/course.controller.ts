@@ -13,6 +13,7 @@ import { COURSE_MESSAGE_PATTERNS } from './messagePattern';
 import { GetMyCoursesUseCase } from 'src/usecases/course/getMyCourses';
 import { DeleteCourseUseCase } from 'src/usecases/course/deleteCourse';
 import { UpdateCoursesUseCase } from 'src/usecases/course/updateCourse';
+import { EnrollCourseUseCase } from 'src/usecases/course/enroll';
 
 @Controller('course')
 export class CourseController {
@@ -31,6 +32,8 @@ export class CourseController {
     private readonly deleteCoursesUsecaseProxy: UseCaseProxy<DeleteCourseUseCase>,
     @Inject(UsecasesProxyModule.UPDATE_COURSE_USER_USECASES_PROXY)
     private readonly updateCoursesUsecaseProxy: UseCaseProxy<UpdateCoursesUseCase>,
+    @Inject(UsecasesProxyModule.ENROLL_COURSES_USECASES_PROXY)
+    private readonly enrollCoursesUsecaseProxy: UseCaseProxy<EnrollCourseUseCase>,
   ) {}
 
   @MessagePattern(COURSE_MESSAGE_PATTERNS.create)
@@ -42,9 +45,8 @@ export class CourseController {
       description,
       category,
       drive_folder_id,
+      instructor_fullname,
     } = createCourseDto;
-
-    // console.log(thumbnail, trailer, title, instructor_id);
 
     const course = await this.createCourseUsecasesProxy
       .getInstance()
@@ -55,6 +57,7 @@ export class CourseController {
         thumbnail,
         category,
         drive_folder_id,
+        instructor_fullname,
       );
     return course;
   }
@@ -66,8 +69,10 @@ export class CourseController {
   }
 
   @MessagePattern(COURSE_MESSAGE_PATTERNS.getList)
-  async getListCourse() {
-    const result = await this.getListCourseUsecasesProxy.getInstance().excute();
+  async getListCourse(@Payload() filter) {
+    const result = await this.getListCourseUsecasesProxy
+      .getInstance()
+      .excute(filter);
     return result;
   }
 
@@ -103,6 +108,20 @@ export class CourseController {
     const result = await this.updateCoursesUsecaseProxy
       .getInstance()
       .excute(data.course_id, { ...data.data });
+    return result;
+  }
+
+  @MessagePattern(COURSE_MESSAGE_PATTERNS.enroll)
+  async enrollCourse(
+    @Payload()
+    data: {
+      course_id: number;
+      user_id: number;
+    },
+  ) {
+    const result = await this.enrollCoursesUsecaseProxy
+      .getInstance()
+      .excute(data.course_id, data.user_id);
     return result;
   }
 }

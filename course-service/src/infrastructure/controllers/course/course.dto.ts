@@ -5,4 +5,5 @@ export class CreateCourseDto {
   description: string;
   category: number;
   drive_folder_id: string;
+  instructor_fullname: string;
 }

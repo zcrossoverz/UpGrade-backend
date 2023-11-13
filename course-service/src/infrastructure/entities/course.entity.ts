@@ -29,6 +29,9 @@ export class Course {
   @Column()
   instructor_id: number;
 
+  @Column({ nullable: true })
+  instructor_fullname: string;
+
   @Column()
   price: number;
 
@@ -41,8 +44,8 @@ export class Course {
   @Column()
   members_count: number;
 
-  @Column({ nullable: true })
-  members_id: number;
+  @Column({ type: 'simple-array', nullable: true })
+  members_id: number[];
 
   @Column()
   status: typeStatusCourse;

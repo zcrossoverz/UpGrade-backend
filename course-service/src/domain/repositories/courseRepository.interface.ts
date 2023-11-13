@@ -8,9 +8,21 @@ export interface ICourseRepository {
     thumbnail_url: string,
     category: number,
     drive_folder_id: string,
+    instructor_fullname: string,
   ): Promise<CourseM>;
   getCourse(id: number): Promise<CourseM>;
-  getList(): Promise<{ datas: CourseM[]; count: number }>;
+  getList(filter: {
+    limit?: number;
+    page?: number;
+    order?: {
+      key: string;
+      value: string;
+    };
+    query?: {
+      key: string;
+      value: string;
+    }[];
+  }): Promise<{ datas: CourseM[]; count: number }>;
   getListByKey(
     key: string,
     value: any,

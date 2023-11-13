@@ -8,8 +8,21 @@ export class GetListCoursesUseCase {
     private readonly courseRepository: ICourseRepository,
   ) {}
 
-  async excute(): Promise<{ datas: CourseM[]; count: number }> {
-    const result = await this.courseRepository.getList();
+  async excute(data: {
+    filter: {
+      limit?: number;
+      page?: number;
+      order?: {
+        key: string;
+        value: string;
+      };
+      query?: {
+        key: string;
+        value: string;
+      }[];
+    };
+  }): Promise<{ datas: CourseM[]; count: number }> {
+    const result = await this.courseRepository.getList(data.filter);
     this.logger.log('GetListCoursesUseCase execute', 'return list course');
     return result;
   }

@@ -32,6 +32,7 @@ import { ProcessApprovalUseCases } from 'src/usecases/approvalRequest/approvalPr
 import { GetListApprovalUseCases } from 'src/usecases/approvalRequest/getList';
 import { DeleteCourseUseCase } from 'src/usecases/course/deleteCourse';
 import { UpdateCoursesUseCase } from 'src/usecases/course/updateCourse';
+import { EnrollCourseUseCase } from 'src/usecases/course/enroll';
 
 export class UseCaseProxy<T> {
   constructor(private readonly useCase: T) {}
@@ -52,6 +53,7 @@ export class UsecasesProxyModule {
   static UPDATE_COURSE_USER_USECASES_PROXY = 'putCourseUsecasesProxy';
   static POST_UPLOADVIDEO_USECASES_PROXY = 'postUploadVideoUsecasesProxy';
   static GET_MY_COURSES_USECASES_PROXY = 'getMyCourseUsecasesProxy';
+  static ENROLL_COURSES_USECASES_PROXY = 'enrollCourseUsecasesProxy';
 
   // category
   static GET_LIST_CATEGORY_USECASES_PROXY = 'getListCategoryUsecasesProxy';
@@ -133,6 +135,12 @@ export class UsecasesProxyModule {
       provide: UsecasesProxyModule.UPDATE_COURSE_USER_USECASES_PROXY,
       useFactory: (logger: LoggerService, courseRepository: CourseRepository) =>
         new UseCaseProxy(new UpdateCoursesUseCase(logger, courseRepository)),
+      inject: [LoggerService, CourseRepository],
+    },
+    {
+      provide: UsecasesProxyModule.ENROLL_COURSES_USECASES_PROXY,
+      useFactory: (logger: LoggerService, courseRepository: CourseRepository) =>
+        new UseCaseProxy(new EnrollCourseUseCase(logger, courseRepository)),
       inject: [LoggerService, CourseRepository],
     },
 

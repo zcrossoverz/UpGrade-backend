@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { ICourseRepository } from 'src/domain/repositories/courseRepository.interface';
 import { CourseM, typeStatusCourse } from 'src/domain/model/course';
 import { Course } from '../entities/course.entity';
@@ -33,6 +33,7 @@ export class CourseRepository implements ICourseRepository {
     thumbnail_url: string,
     category: number,
     drive_folder_id: string,
+    instructor_fullname: string,
   ): Promise<CourseM> {
     const categorySelect = await this.categoryRepository.findOneBy({
       id: category,
@@ -53,6 +54,7 @@ export class CourseRepository implements ICourseRepository {
         category: categorySelect,
         drive_folder_id,
         members_count: 0,
+        instructor_fullname,
       }),
     );
     return result;
@@ -72,8 +74,36 @@ export class CourseRepository implements ICourseRepository {
     return result;
   }
 
-  async getList(): Promise<{ datas: CourseM[]; count: number }> {
-    const [datas, count] = await this.courseRepository.findAndCount({});
+  async getList(filter: {
+    limit?: number;
+    page?: number;
+    order?: {
+      key: string;
+      value: string;
+    };
+    query?: {
+      key: string;
+      value: string;
+    }[];
+  }): Promise<{ datas: CourseM[]; count: number }> {
+    const { limit = 5, page = 1, order, query } = filter;
+
+    const offset = (page - 1) * limit;
+
+    const where: Record<string, any> = {};
+    if (query) {
+      query.forEach(({ key, value }) => {
+        where[key] = ILike(`%${value}%`);
+      });
+    }
+
+    const [datas, count] = await this.courseRepository.findAndCount({
+      where,
+      ...(order ? { order: { [order.key]: order.value } } : {}),
+      take: limit,
+      skip: offset,
+    });
+
     return {
       datas,
       count,

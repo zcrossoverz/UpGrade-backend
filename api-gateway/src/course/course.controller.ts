@@ -31,6 +31,7 @@ export class CourseController {
   ) {
     const { user } = request;
     createCourseDto.instructor_id = user.id;
+    createCourseDto.instructor_fullname = user.firstName + ' ' + user.lastName;
 
     return this.courseService.create(createCourseDto, files);
   }
@@ -68,9 +69,9 @@ export class CourseController {
     return this.courseService.updateCourse(data.course_id, { ...data });
   }
 
-  @Get('')
-  findAll() {
-    return this.courseService.getList();
+  @Post('/get-list')
+  findAll(@Body() data) {
+    return this.courseService.getList(data);
   }
 
   @Get('/:id')
@@ -122,5 +123,18 @@ export class CourseController {
   @Post('/delete/:id')
   deleteCourse(@Param('id') id: number) {
     return this.courseService.deleteCourse(id);
+  }
+
+  @Post('/enroll')
+  @UseGuards(AuthGuard)
+  enrollCourse(
+    @Request() request,
+    @Body()
+    data: {
+      course_id: number;
+    },
+  ) {
+    const { user } = request;
+    return this.courseService.enrollCourse(data.course_id, user.id);
   }
 }
