@@ -13,6 +13,8 @@ import { ApprovalRequestRepository } from './approvalRequest.repository';
 import { ApprovalRequest } from '../entities/approvalRequest.entity';
 import { CourseProgressRepository } from './courseProgress.repository';
 import { CourseProgress } from '../entities/courseProgress.entity';
+import { CommentRepository } from './comment.repository';
+import { Comment } from '../entities/comment.entity';
 
 @Module({
   imports: [
@@ -24,6 +26,7 @@ import { CourseProgress } from '../entities/courseProgress.entity';
       Topic,
       ApprovalRequest,
       CourseProgress,
+      Comment,
     ]),
   ],
   providers: [
@@ -33,6 +36,7 @@ import { CourseProgress } from '../entities/courseProgress.entity';
     TopicRepository,
     ApprovalRequestRepository,
     CourseProgressRepository,
+    CommentRepository,
   ],
   exports: [
     CourseRepository,
@@ -41,6 +45,7 @@ import { CourseProgress } from '../entities/courseProgress.entity';
     TopicRepository,
     ApprovalRequestRepository,
     CourseProgressRepository,
+    CommentRepository,
   ],
 })
 export class RepositoriesModule {}

@@ -24,16 +24,16 @@ export class Comment {
   text: string;
 
   @Column()
-  comment_user_id: number;
+  user_id: number;
 
   @Column()
-  commnet_user_fullname: string;
+  user_fullname: string;
 
   @Column()
-  comment_user_avatar: string;
+  user_avatar: string;
 
   @Column()
-  comment_user_role: enumCommentRole;
+  user_role: enumCommentRole;
 
   @ManyToOne(() => Topic, (topic) => topic.comments)
   topic: Topic;
@@ -41,7 +41,7 @@ export class Comment {
   @ManyToOne(() => Comment, { nullable: true })
   parent: Comment;
 
-  @OneToMany(() => Comment, (child) => child.parent)
+  @OneToMany(() => Comment, (child) => child.parent, { nullable: true })
   children: Comment[];
 
   @Column({ type: 'simple-array', nullable: true })
