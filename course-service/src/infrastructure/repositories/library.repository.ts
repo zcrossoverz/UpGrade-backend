@@ -17,7 +17,7 @@ export class LibraryRepository implements ILibraryRepository {
     private readonly courseProgressRepository: Repository<CourseProgress>,
   ) {}
 
-  async create(user_id: number, course_progress_id: number): Promise<LibraryM> {
+  async add(user_id: number, course_progress_id: number): Promise<any> {
     if (!user_id || !course_progress_id) {
       throw new RpcException(
         new BadRequestException('user id and course progress id is required'),
@@ -36,12 +36,26 @@ export class LibraryRepository implements ILibraryRepository {
       );
     }
 
-    const result = await this.repository.save(
-      this.repository.create({
+    const library = await this.repository.findOne({
+      where: {
         user_id,
-        courses: [courseProgress],
-      }),
-    );
+      },
+      relations: {
+        courses: true,
+      },
+    });
+
+    if (!library) {
+      return await this.repository.save(
+        this.repository.create({
+          user_id,
+          courses: [courseProgress],
+        }),
+      );
+    }
+
+    library.courses.push(courseProgress);
+    const result = await this.repository.save(library);
 
     return result;
   }
@@ -92,10 +106,10 @@ export class LibraryRepository implements ILibraryRepository {
       count,
     };
   }
-  async get(id: number): Promise<LibraryM> {
+  async get(user_id: number): Promise<LibraryM> {
     const result = await this.repository.findOne({
       where: {
-        id,
+        user_id,
       },
     });
     return result;

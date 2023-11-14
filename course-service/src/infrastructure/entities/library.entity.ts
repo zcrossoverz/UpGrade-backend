@@ -2,10 +2,9 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToMany,
-  JoinTable,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { CourseProgress } from './courseProgress.entity';
 
@@ -17,8 +16,7 @@ export class Library {
   @Column()
   user_id: number;
 
-  @ManyToMany(() => CourseProgress)
-  @JoinTable()
+  @OneToMany(() => CourseProgress, (courseProgress) => courseProgress.library)
   courses: CourseProgress[];
 
   @CreateDateColumn()

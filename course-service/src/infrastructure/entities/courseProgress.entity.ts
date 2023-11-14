@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { Course } from './course.entity';
 import { Topic } from './topic.entity';
+import { Library } from './library.entity';
 
 @Entity()
 export class CourseProgress {
@@ -27,6 +28,10 @@ export class CourseProgress {
   @ManyToOne(() => Topic, (topic) => topic, { nullable: true })
   @JoinColumn()
   currentTopic: Topic;
+
+  @ManyToOne(() => Library, (library) => library.courses, { nullable: true })
+  @JoinColumn()
+  library: Library;
 
   @ManyToMany(() => Topic, { nullable: true })
   @JoinTable()
