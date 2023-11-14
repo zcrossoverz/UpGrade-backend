@@ -4,7 +4,7 @@ import { ILike, Not, Repository } from 'typeorm';
 import { RpcException } from '@nestjs/microservices';
 import { CourseProgress } from '../entities/courseProgress.entity';
 import { IfilterSearch } from 'src/domain/constant/constant';
-import { ILibraryRepository } from 'src/domain/repositories/library.interface';
+import { ILibraryRepository } from 'src/domain/repositories/libraryRepository.interface';
 import { Library } from '../entities/library.entity';
 import { LibraryM } from 'src/domain/model/library';
 
@@ -62,7 +62,7 @@ export class LibraryRepository implements ILibraryRepository {
   }
   async getList(
     filter: IfilterSearch,
-  ): Promise<{ datas: Library[]; count: number }> {
+  ): Promise<{ datas: LibraryM[]; count: number }> {
     const { limit = 5, page = 1, order, query, exclude } = filter;
 
     const offset = (page - 1) * limit;
@@ -92,7 +92,7 @@ export class LibraryRepository implements ILibraryRepository {
       count,
     };
   }
-  async get(id: number): Promise<Library> {
+  async get(id: number): Promise<LibraryM> {
     const result = await this.repository.findOne({
       where: {
         id,

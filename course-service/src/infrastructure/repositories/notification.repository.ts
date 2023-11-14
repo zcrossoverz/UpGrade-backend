@@ -1,66 +1,40 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ILike, Not, Repository } from 'typeorm';
-import { ICommentRepository } from 'src/domain/repositories/commentRepository.interface';
-import { Comment, enumCommentRole } from '../entities/comment.entity';
-import { Topic } from '../entities/topic.entity';
-import { IfilterSearch } from 'src/domain/constant/constant';
-import { CommentM } from 'src/domain/model/comment';
 import { RpcException } from '@nestjs/microservices';
+import { IfilterSearch } from 'src/domain/constant/constant';
+import { INotificationRepository } from 'src/domain/repositories/notificationRepository.interface';
+import { NotificationM } from 'src/domain/model/notification';
+import { Notification } from '../entities/notification.entity';
 
 @Injectable()
-export class CommentRepository implements ICommentRepository {
+export class NotificationRepository implements INotificationRepository {
   constructor(
-    @InjectRepository(Comment)
-    private readonly repository: Repository<Comment>,
-    @InjectRepository(Topic)
-    private readonly topicRepository: Repository<Topic>,
+    @InjectRepository(Notification)
+    private readonly repository: Repository<Notification>,
   ) {}
   async create(
     user_id: number,
-    user_fullname: string,
-    user_avatar: string,
-    user_role: enumCommentRole,
-    topic_id: number,
-    parent_id?: number,
-  ): Promise<CommentM> {
-    if (!user_id || !user_fullname || !user_avatar || !user_role || !topic_id) {
+    text: string,
+    href: string,
+  ): Promise<NotificationM> {
+    if (!user_id || !text || !href) {
       throw new RpcException(
-        new BadRequestException('field required cannot empty'),
+        new BadRequestException('user id, text, href is required'),
       );
     }
-
-    const topic = await this.topicRepository.findOne({
-      where: {
-        id: topic_id,
-      },
-    });
-
-    if (topic) {
-      throw new RpcException(new BadRequestException('topic not found'));
-    }
-
     const result = await this.repository.save(
       this.repository.create({
         user_id,
-        user_avatar,
-        user_fullname,
-        user_role,
-        topic,
-        ...(parent_id !== undefined
-          ? {
-              parent: await this.repository.findOne({
-                where: {
-                  id: parent_id,
-                },
-              }),
-            }
-          : {}),
+        text,
+        href,
+        isRead: false,
       }),
     );
 
     return result;
   }
+
   async update(id: number, data: any): Promise<boolean> {
     if (!id) {
       throw new RpcException(new BadRequestException('id is required'));
@@ -77,7 +51,7 @@ export class CommentRepository implements ICommentRepository {
   }
   async getList(
     filter: IfilterSearch,
-  ): Promise<{ datas: CommentM[]; count: number }> {
+  ): Promise<{ datas: NotificationM[]; count: number }> {
     const { limit = 5, page = 1, order, query, exclude } = filter;
 
     const offset = (page - 1) * limit;
@@ -107,7 +81,7 @@ export class CommentRepository implements ICommentRepository {
       count,
     };
   }
-  async get(id: number): Promise<CommentM> {
+  async get(id: number): Promise<NotificationM> {
     const result = await this.repository.findOne({
       where: {
         id,
