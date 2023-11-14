@@ -17,6 +17,8 @@ import { CommentRepository } from './comment.repository';
 import { Comment } from '../entities/comment.entity';
 import { Library } from '../entities/library.entity';
 import { LibraryRepository } from './library.repository';
+import { NoteRepository } from './note.repository';
+import { Note } from '../entities/note.entity';
 
 @Module({
   imports: [
@@ -30,6 +32,7 @@ import { LibraryRepository } from './library.repository';
       CourseProgress,
       Comment,
       Library,
+      Note,
     ]),
   ],
   providers: [
@@ -41,6 +44,7 @@ import { LibraryRepository } from './library.repository';
     CourseProgressRepository,
     CommentRepository,
     LibraryRepository,
+    NoteRepository,
   ],
   exports: [
     CourseRepository,
@@ -51,6 +55,7 @@ import { LibraryRepository } from './library.repository';
     CourseProgressRepository,
     CommentRepository,
     LibraryRepository,
+    NoteRepository,
   ],
 })
 export class RepositoriesModule {}

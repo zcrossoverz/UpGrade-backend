@@ -14,7 +14,7 @@ export class Note {
   id: number;
 
   @Column()
-  user_id: string;
+  user_id: number;
 
   @Column()
   comment: string;
