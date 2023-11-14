@@ -111,6 +111,17 @@ export class LibraryRepository implements ILibraryRepository {
       where: {
         user_id,
       },
+      relations: {
+        courses: {
+          currentTopic: true,
+          course: {
+            units: {
+              topics: true,
+            },
+          },
+          topicCompleted: true,
+        },
+      },
     });
     return result;
   }

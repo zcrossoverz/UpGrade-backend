@@ -31,4 +31,8 @@ export const COURSE_MESSAGE_PATTERNS = {
     prefix: 'course',
     action: 'enroll',
   },
+  getLibrary: {
+    prefix: 'course',
+    action: 'get-library',
+  },
 };

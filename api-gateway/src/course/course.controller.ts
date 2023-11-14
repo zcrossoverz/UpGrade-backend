@@ -137,4 +137,11 @@ export class CourseController {
     const { user } = request;
     return this.courseService.enrollCourse(data.course_id, user.id);
   }
+
+  @Post('/get-library')
+  @UseGuards(AuthGuard)
+  getLibrary(@Request() request) {
+    const { user } = request;
+    return this.courseService.getLibrary(user.id);
+  }
 }

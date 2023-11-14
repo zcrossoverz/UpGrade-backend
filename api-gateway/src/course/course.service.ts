@@ -138,4 +138,10 @@ export class CourseService {
       user_id,
     });
   }
+
+  getLibrary(user_id: number) {
+    return this.client.send(COURSE_MESSAGE_PATTERNS.getLibrary, {
+      user_id,
+    });
+  }
 }

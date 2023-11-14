@@ -36,6 +36,7 @@ import { EnrollCourseUseCase } from 'src/usecases/course/enroll';
 import { CourseProgressRepository } from '../repositories/courseProgress.repository';
 import { LibraryRepository } from '../repositories/library.repository';
 import { NotificationRepository } from '../repositories/notification.repository';
+import { GetLibraryUseCase } from 'src/usecases/course/getLibrary.usecases';
 
 export class UseCaseProxy<T> {
   constructor(private readonly useCase: T) {}
@@ -57,6 +58,7 @@ export class UsecasesProxyModule {
   static POST_UPLOADVIDEO_USECASES_PROXY = 'postUploadVideoUsecasesProxy';
   static GET_MY_COURSES_USECASES_PROXY = 'getMyCourseUsecasesProxy';
   static ENROLL_COURSES_USECASES_PROXY = 'enrollCourseUsecasesProxy';
+  static GET_LIBRARY_USECASES_PROXY = 'getLibraryUsecasesProxy';
 
   // category
   static GET_LIST_CATEGORY_USECASES_PROXY = 'getListCategoryUsecasesProxy';
@@ -165,6 +167,14 @@ export class UsecasesProxyModule {
         LibraryRepository,
         NotificationRepository,
       ],
+    },
+    {
+      provide: UsecasesProxyModule.GET_LIBRARY_USECASES_PROXY,
+      useFactory: (
+        logger: LoggerService,
+        libraryRepository: LibraryRepository,
+      ) => new UseCaseProxy(new GetLibraryUseCase(logger, libraryRepository)),
+      inject: [LoggerService, LibraryRepository],
     },
 
     // category
