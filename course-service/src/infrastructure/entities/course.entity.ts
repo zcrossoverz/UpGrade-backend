@@ -14,6 +14,7 @@ import {
 import { Category } from './category.entity';
 import { Unit } from './unit.entity';
 import { Member } from './member.entity';
+import { Review } from './review.entity';
 
 @Entity()
 export class Course {
@@ -66,4 +67,7 @@ export class Course {
   @ManyToMany(() => Member)
   @JoinTable()
   members: Member[];
+
+  @OneToMany(() => Review, (review) => review.course)
+  reviews: Review[];
 }

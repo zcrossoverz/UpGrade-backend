@@ -4,11 +4,14 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Unit } from './unit.entity';
 import { typeStatusTopic } from 'src/domain/model/topic';
+import { Note } from './note.entity';
+import { Comment } from './comment.entity';
 
 @Entity()
 export class Topic {
@@ -41,6 +44,12 @@ export class Topic {
     default: typeStatusTopic.PRIVATE,
   })
   status: typeStatusTopic;
+
+  @OneToMany(() => Note, (note) => note.topic)
+  notes: Note[];
+
+  @OneToMany(() => Comment, (comment) => comment.topic)
+  comments: Comment[];
 
   @CreateDateColumn()
   created_at: Date;
