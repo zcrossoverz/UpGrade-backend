@@ -28,6 +28,12 @@ export class Review {
   @Column()
   reviewer_fullname: string;
 
+  @Column()
+  reviewer_avatar: string;
+
+  @Column()
+  reviewer_email: string;
+
   @CreateDateColumn()
   created_at: Date;
 
