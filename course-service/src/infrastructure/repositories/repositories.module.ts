@@ -11,11 +11,20 @@ import { UnitRepository } from './unit.repository';
 import { TopicRepository } from './topic.repository';
 import { ApprovalRequestRepository } from './approvalRequest.repository';
 import { ApprovalRequest } from '../entities/approvalRequest.entity';
+import { CourseProgressRepository } from './courseProgress.repository';
+import { CourseProgress } from '../entities/courseProgress.entity';
 
 @Module({
   imports: [
     TypeOrmConfigModule,
-    TypeOrmModule.forFeature([Course, Category, Unit, Topic, ApprovalRequest]),
+    TypeOrmModule.forFeature([
+      Course,
+      Category,
+      Unit,
+      Topic,
+      ApprovalRequest,
+      CourseProgress,
+    ]),
   ],
   providers: [
     CourseRepository,
@@ -23,6 +32,7 @@ import { ApprovalRequest } from '../entities/approvalRequest.entity';
     UnitRepository,
     TopicRepository,
     ApprovalRequestRepository,
+    CourseProgressRepository,
   ],
   exports: [
     CourseRepository,
@@ -30,6 +40,7 @@ import { ApprovalRequest } from '../entities/approvalRequest.entity';
     UnitRepository,
     TopicRepository,
     ApprovalRequestRepository,
+    CourseProgressRepository,
   ],
 })
 export class RepositoriesModule {}

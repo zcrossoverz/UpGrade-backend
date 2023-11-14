@@ -24,11 +24,11 @@ export class CourseProgress {
   @JoinColumn()
   course: Course;
 
-  @ManyToOne(() => Topic, (topic) => topic)
+  @ManyToOne(() => Topic, (topic) => topic, { nullable: true })
   @JoinColumn()
   currentTopic: Topic;
 
-  @ManyToMany(() => Topic)
+  @ManyToMany(() => Topic, { nullable: true })
   @JoinTable()
   topicCompleted: Topic[];
 
