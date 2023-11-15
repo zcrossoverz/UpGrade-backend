@@ -37,6 +37,8 @@ import { CourseProgressRepository } from '../repositories/courseProgress.reposit
 import { LibraryRepository } from '../repositories/library.repository';
 import { NotificationRepository } from '../repositories/notification.repository';
 import { GetLibraryUseCase } from 'src/usecases/course/getLibrary.usecases';
+import { GetUnreadNotiListUseCases } from 'src/usecases/notification/getListUnread';
+import { MarkReadNotiUseCases } from 'src/usecases/notification/markRead';
 
 export class UseCaseProxy<T> {
   constructor(private readonly useCase: T) {}
@@ -85,6 +87,13 @@ export class UsecasesProxyModule {
     'postApprovalRequestUsecasesProxy';
   static PROCESS_APPROVAL_REQUEST_USECASES_PROXY =
     'processApprovalRequestUsecasesProxy';
+
+  // notifications
+
+  static GET_LIST_UNREAD_NOTIFICATIONS_USECASES_PROXY =
+    'getListUnreadNotificationsUsecasesProxy';
+  static MARK_READ_NOTIFICATIONS_USECASES_PROXY =
+    'markReadNotificationsUsecasesProxy';
 
   static USE_CASE_PROXY_MAP: {
     provide: string;
@@ -300,6 +309,21 @@ export class UsecasesProxyModule {
         repository: ApprovalRequestRepository,
       ) => new UseCaseProxy(new GetListApprovalUseCases(logger, repository)),
       inject: [LoggerService, ApprovalRequestRepository],
+    },
+
+    // notification
+
+    {
+      provide: UsecasesProxyModule.GET_LIST_UNREAD_NOTIFICATIONS_USECASES_PROXY,
+      useFactory: (logger: LoggerService, repository: NotificationRepository) =>
+        new UseCaseProxy(new GetUnreadNotiListUseCases(logger, repository)),
+      inject: [LoggerService, NotificationRepository],
+    },
+    {
+      provide: UsecasesProxyModule.MARK_READ_NOTIFICATIONS_USECASES_PROXY,
+      useFactory: (logger: LoggerService, repository: NotificationRepository) =>
+        new UseCaseProxy(new MarkReadNotiUseCases(logger, repository)),
+      inject: [LoggerService, NotificationRepository],
     },
   ];
 

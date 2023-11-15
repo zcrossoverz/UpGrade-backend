@@ -5,6 +5,7 @@ import { CategoryController } from './category/category.controller';
 import { UnitController } from './unit/unit.controller';
 import { TopicController } from './topic/topic.controller';
 import { ApprovalRequestController } from './approval/approval.controller';
+import { NotificationController } from './notification/notification.controller';
 
 @Module({
   imports: [UsecasesProxyModule.register()],
@@ -14,6 +15,7 @@ import { ApprovalRequestController } from './approval/approval.controller';
     UnitController,
     TopicController,
     ApprovalRequestController,
+    NotificationController,
   ],
 })
 export class ControllersModule {}

@@ -13,6 +13,18 @@ export class NotificationRepository implements INotificationRepository {
     @InjectRepository(Notification)
     private readonly repository: Repository<Notification>,
   ) {}
+
+  async updateMulti(where: any, data: any): Promise<boolean> {
+    const result = await this.repository
+      .createQueryBuilder()
+      .update()
+      .set(data)
+      .where(where)
+      .execute();
+    console.log(data, where);
+
+    return result.affected > 0;
+  }
   async create(
     user_id: number,
     text: string,
@@ -52,7 +64,7 @@ export class NotificationRepository implements INotificationRepository {
   async getList(
     filter: IfilterSearch,
   ): Promise<{ datas: NotificationM[]; count: number }> {
-    const { limit = 5, page = 1, order, query, exclude } = filter;
+    const { limit = 5, page = 1, order, query, exclude, explicit } = filter;
 
     const offset = (page - 1) * limit;
 
@@ -69,12 +81,20 @@ export class NotificationRepository implements INotificationRepository {
       });
     }
 
+    if (explicit) {
+      explicit.forEach(({ key, value }) => {
+        where[key] = value;
+      });
+    }
+
     const [datas, count] = await this.repository.findAndCount({
       where,
       ...(order ? { order: { [order.key]: order.value } } : {}),
       take: limit,
       skip: offset,
     });
+
+    console.log(datas, count);
 
     return {
       datas,

@@ -11,6 +11,7 @@ import configuration from 'config/configuration';
 import { CategoryModule } from './category/category.module';
 import { UnitModule } from './unit/unit.module';
 import { TopicModule } from './topic/topic.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { TopicModule } from './topic/topic.module';
     AuthModule,
     GdriveModule,
     UnitModule,
+    NotificationModule,
     TopicModule,
     ConfigModule.forRoot({
       load: [configuration],

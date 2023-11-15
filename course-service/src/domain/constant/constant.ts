@@ -7,10 +7,14 @@ export interface IfilterSearch {
   };
   query?: {
     key: string;
-    value: string;
+    value: any;
   }[];
   exclude?: {
     key: string;
-    value: string;
+    value: any;
+  }[];
+  explicit?: {
+    key: string;
+    value: any;
   }[];
 }
