@@ -11,4 +11,8 @@ export const REVIEW_MESSAGE_PATTERNS = {
     prefix: 'review',
     action: 'delete',
   },
+  getList: {
+    prefix: 'review',
+    action: 'get-list',
+  },
 };

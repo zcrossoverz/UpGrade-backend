@@ -1,6 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { REVIEW_MESSAGE_PATTERNS } from './messagePattern';
+import { IfilterSearch } from 'src/common/interface/filterSearch';
 
 @Injectable()
 export class ReviewService {
@@ -37,6 +38,12 @@ export class ReviewService {
   async deleteReview(id: number) {
     return this.client.send(REVIEW_MESSAGE_PATTERNS.delete, {
       id,
+    });
+  }
+
+  async getList(filter: IfilterSearch) {
+    return this.client.send(REVIEW_MESSAGE_PATTERNS.getList, {
+      filter,
     });
   }
 }

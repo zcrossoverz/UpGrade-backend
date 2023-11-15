@@ -43,6 +43,7 @@ import { CreateReviewUseCase } from 'src/usecases/review/create';
 import { ReviewRepository } from '../repositories/review.repository';
 import { UpdateReviewUseCase } from 'src/usecases/review/update';
 import { DeleteReviewUseCase } from 'src/usecases/review/delete';
+import { GetListReviewUseCase } from 'src/usecases/review/getList';
 
 export class UseCaseProxy<T> {
   constructor(private readonly useCase: T) {}
@@ -104,6 +105,7 @@ export class UsecasesProxyModule {
   static CREATE_REVIEW_USECASES_PROXY = 'createReviewUsecasesProxy';
   static UPDATE_REVIEW_USECASES_PROXY = 'updateReviewUsecasesProxy';
   static DELETE_REVIEW_USECASES_PROXY = 'deleteReviewUsecasesProxy';
+  static GETLIST_REVIEW_USECASES_PROXY = 'getListReviewUsecasesProxy';
 
   static USE_CASE_PROXY_MAP: {
     provide: string;
@@ -353,6 +355,12 @@ export class UsecasesProxyModule {
       provide: UsecasesProxyModule.DELETE_REVIEW_USECASES_PROXY,
       useFactory: (logger: LoggerService, repository: ReviewRepository) =>
         new UseCaseProxy(new DeleteReviewUseCase(logger, repository)),
+      inject: [LoggerService, ReviewRepository],
+    },
+    {
+      provide: UsecasesProxyModule.GETLIST_REVIEW_USECASES_PROXY,
+      useFactory: (logger: LoggerService, repository: ReviewRepository) =>
+        new UseCaseProxy(new GetListReviewUseCase(logger, repository)),
       inject: [LoggerService, ReviewRepository],
     },
   ];

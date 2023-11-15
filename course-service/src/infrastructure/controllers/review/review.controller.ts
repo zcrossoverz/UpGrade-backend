@@ -9,6 +9,8 @@ import { REVIEW_MESSAGE_PATTERNS } from './messagePattern';
 import { CreateReviewUseCase } from 'src/usecases/review/create';
 import { UpdateReviewUseCase } from 'src/usecases/review/update';
 import { DeleteReviewUseCase } from 'src/usecases/review/delete';
+import { IfilterSearch } from 'src/domain/constant/constant';
+import { GetListReviewUseCase } from 'src/usecases/review/getList';
 
 @Controller()
 export class ReviewController {
@@ -19,6 +21,8 @@ export class ReviewController {
     private readonly update: UseCaseProxy<UpdateReviewUseCase>,
     @Inject(UsecasesProxyModule.DELETE_REVIEW_USECASES_PROXY)
     private readonly deleteClient: UseCaseProxy<DeleteReviewUseCase>,
+    @Inject(UsecasesProxyModule.GETLIST_REVIEW_USECASES_PROXY)
+    private readonly getList: UseCaseProxy<GetListReviewUseCase>,
   ) {}
 
   @MessagePattern(REVIEW_MESSAGE_PATTERNS.create)
@@ -83,6 +87,18 @@ export class ReviewController {
     const { id } = payload;
 
     const result = await this.deleteClient.getInstance().excute(id);
+    return result;
+  }
+
+  @MessagePattern(REVIEW_MESSAGE_PATTERNS.getList)
+  async getListRw(
+    @Payload()
+    payload: {
+      filter: IfilterSearch;
+    },
+  ) {
+    const { filter } = payload;
+    const result = await this.getList.getInstance().excute(filter);
     return result;
   }
 }

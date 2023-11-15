@@ -50,6 +50,7 @@ export class ReviewRepository implements IReviewRepository {
         reviewer_fullname: user_fullname,
         reviewer_avatar: user_avatar,
         reviewer_email: user_email,
+        course_id,
       }),
     );
 
@@ -73,7 +74,7 @@ export class ReviewRepository implements IReviewRepository {
   async getList(
     filter: IfilterSearch,
   ): Promise<{ datas: ReviewM[]; count: number }> {
-    const { limit = 5, page = 1, order, query, exclude } = filter;
+    const { limit = 5, page = 1, order, query, exclude, explicit } = filter;
 
     const offset = (page - 1) * limit;
 
@@ -87,6 +88,12 @@ export class ReviewRepository implements IReviewRepository {
     if (exclude) {
       exclude.forEach(({ key, value }) => {
         where[key] = Not(value);
+      });
+    }
+
+    if (explicit) {
+      explicit.forEach(({ key, value }) => {
+        where[key] = value;
       });
     }
 

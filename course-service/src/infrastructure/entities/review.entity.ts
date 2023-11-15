@@ -26,6 +26,9 @@ export class Review {
   reviewer_id: number;
 
   @Column()
+  course_id: number;
+
+  @Column()
   reviewer_fullname: string;
 
   @Column({ nullable: true })

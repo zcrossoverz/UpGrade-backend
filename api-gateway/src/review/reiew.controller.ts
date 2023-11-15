@@ -1,6 +1,7 @@
 import { Controller, Post, Body, UseGuards, Request } from '@nestjs/common';
 import { AuthGuard } from 'src/common/guards/auth';
 import { ReviewService } from './review.service';
+import { IfilterSearch } from 'src/common/interface/filterSearch';
 
 @Controller('review')
 export class ReviewController {
@@ -41,5 +42,10 @@ export class ReviewController {
   delete(@Body() data: { id: number }) {
     const { id } = data;
     return this.service.deleteReview(id);
+  }
+
+  @Post('/get-list')
+  getList(@Body() data: IfilterSearch) {
+    return this.service.getList(data);
   }
 }
