@@ -7,6 +7,7 @@ import { TopicController } from './topic/topic.controller';
 import { ApprovalRequestController } from './approval/approval.controller';
 import { NotificationController } from './notification/notification.controller';
 import { ReviewController } from './review/review.controller';
+import { NoteController } from './note/note.controller';
 
 @Module({
   imports: [UsecasesProxyModule.register()],
@@ -18,6 +19,7 @@ import { ReviewController } from './review/review.controller';
     ApprovalRequestController,
     NotificationController,
     ReviewController,
+    NoteController,
   ],
 })
 export class ControllersModule {}

@@ -13,6 +13,7 @@ import { UnitModule } from './unit/unit.module';
 import { TopicModule } from './topic/topic.module';
 import { NotificationModule } from './notification/notification.module';
 import { ReviewModule } from './review/review.module';
+import { NoteModule } from './note/note.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { ReviewModule } from './review/review.module';
     NotificationModule,
     TopicModule,
     ReviewModule,
+    NoteModule,
     ConfigModule.forRoot({
       load: [configuration],
     }),

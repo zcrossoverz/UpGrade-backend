@@ -41,6 +41,7 @@ export class NoteRepository implements INoteRepository {
         topic,
         comment,
         time,
+        topic_id,
       }),
     );
 
@@ -64,7 +65,7 @@ export class NoteRepository implements INoteRepository {
   async getList(
     filter: IfilterSearch,
   ): Promise<{ datas: NoteM[]; count: number }> {
-    const { limit = 5, page = 1, order, query, exclude } = filter;
+    const { limit = 5, page = 1, order, query, exclude, explicit } = filter;
 
     const offset = (page - 1) * limit;
 
@@ -78,6 +79,12 @@ export class NoteRepository implements INoteRepository {
     if (exclude) {
       exclude.forEach(({ key, value }) => {
         where[key] = Not(value);
+      });
+    }
+
+    if (explicit) {
+      explicit.forEach(({ key, value }) => {
+        where[key] = value;
       });
     }
 

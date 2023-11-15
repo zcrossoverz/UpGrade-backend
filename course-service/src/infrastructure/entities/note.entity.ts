@@ -22,6 +22,9 @@ export class Note {
   @Column()
   time: number;
 
+  @Column()
+  topic_id: number;
+
   @ManyToOne(() => Topic, (topic) => topic.notes)
   topic: Topic;
 

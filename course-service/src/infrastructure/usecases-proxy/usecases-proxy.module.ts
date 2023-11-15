@@ -44,6 +44,10 @@ import { ReviewRepository } from '../repositories/review.repository';
 import { UpdateReviewUseCase } from 'src/usecases/review/update';
 import { DeleteReviewUseCase } from 'src/usecases/review/delete';
 import { GetListReviewUseCase } from 'src/usecases/review/getList';
+import { CreateNoteUseCase } from 'src/usecases/note/add';
+import { NoteRepository } from '../repositories/note.repository';
+import { GetListNoteUseCase } from 'src/usecases/note/getList';
+import { DeleteNoteUseCase } from 'src/usecases/note/delete';
 
 export class UseCaseProxy<T> {
   constructor(private readonly useCase: T) {}
@@ -106,6 +110,11 @@ export class UsecasesProxyModule {
   static UPDATE_REVIEW_USECASES_PROXY = 'updateReviewUsecasesProxy';
   static DELETE_REVIEW_USECASES_PROXY = 'deleteReviewUsecasesProxy';
   static GETLIST_REVIEW_USECASES_PROXY = 'getListReviewUsecasesProxy';
+
+  // note
+  static ADD_NOTE_USECASES_PROXY = 'addNoteUsecasesProxy';
+  static GETLIST_NOTE_USECASES_PROXY = 'getListNoteUsecasesProxy';
+  static DELETE_NOTE_USECASES_PROXY = 'deleteNoteUsecasesProxy';
 
   static USE_CASE_PROXY_MAP: {
     provide: string;
@@ -362,6 +371,26 @@ export class UsecasesProxyModule {
       useFactory: (logger: LoggerService, repository: ReviewRepository) =>
         new UseCaseProxy(new GetListReviewUseCase(logger, repository)),
       inject: [LoggerService, ReviewRepository],
+    },
+
+    // note
+    {
+      provide: UsecasesProxyModule.ADD_NOTE_USECASES_PROXY,
+      useFactory: (logger: LoggerService, repository: NoteRepository) =>
+        new UseCaseProxy(new CreateNoteUseCase(logger, repository)),
+      inject: [LoggerService, NoteRepository],
+    },
+    {
+      provide: UsecasesProxyModule.GETLIST_NOTE_USECASES_PROXY,
+      useFactory: (logger: LoggerService, repository: NoteRepository) =>
+        new UseCaseProxy(new GetListNoteUseCase(logger, repository)),
+      inject: [LoggerService, NoteRepository],
+    },
+    {
+      provide: UsecasesProxyModule.DELETE_NOTE_USECASES_PROXY,
+      useFactory: (logger: LoggerService, repository: NoteRepository) =>
+        new UseCaseProxy(new DeleteNoteUseCase(logger, repository)),
+      inject: [LoggerService, NoteRepository],
     },
   ];
 
