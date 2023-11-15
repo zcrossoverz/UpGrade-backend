@@ -39,6 +39,10 @@ import { NotificationRepository } from '../repositories/notification.repository'
 import { GetLibraryUseCase } from 'src/usecases/course/getLibrary.usecases';
 import { GetUnreadNotiListUseCases } from 'src/usecases/notification/getListUnread';
 import { MarkReadNotiUseCases } from 'src/usecases/notification/markRead';
+import { CreateReviewUseCase } from 'src/usecases/review/create';
+import { ReviewRepository } from '../repositories/review.repository';
+import { UpdateReviewUseCase } from 'src/usecases/review/update';
+import { DeleteReviewUseCase } from 'src/usecases/review/delete';
 
 export class UseCaseProxy<T> {
   constructor(private readonly useCase: T) {}
@@ -94,6 +98,12 @@ export class UsecasesProxyModule {
     'getListUnreadNotificationsUsecasesProxy';
   static MARK_READ_NOTIFICATIONS_USECASES_PROXY =
     'markReadNotificationsUsecasesProxy';
+
+  // review
+
+  static CREATE_REVIEW_USECASES_PROXY = 'createReviewUsecasesProxy';
+  static UPDATE_REVIEW_USECASES_PROXY = 'updateReviewUsecasesProxy';
+  static DELETE_REVIEW_USECASES_PROXY = 'deleteReviewUsecasesProxy';
 
   static USE_CASE_PROXY_MAP: {
     provide: string;
@@ -324,6 +334,26 @@ export class UsecasesProxyModule {
       useFactory: (logger: LoggerService, repository: NotificationRepository) =>
         new UseCaseProxy(new MarkReadNotiUseCases(logger, repository)),
       inject: [LoggerService, NotificationRepository],
+    },
+
+    // review
+    {
+      provide: UsecasesProxyModule.CREATE_REVIEW_USECASES_PROXY,
+      useFactory: (logger: LoggerService, repository: ReviewRepository) =>
+        new UseCaseProxy(new CreateReviewUseCase(logger, repository)),
+      inject: [LoggerService, ReviewRepository],
+    },
+    {
+      provide: UsecasesProxyModule.UPDATE_REVIEW_USECASES_PROXY,
+      useFactory: (logger: LoggerService, repository: ReviewRepository) =>
+        new UseCaseProxy(new UpdateReviewUseCase(logger, repository)),
+      inject: [LoggerService, ReviewRepository],
+    },
+    {
+      provide: UsecasesProxyModule.DELETE_REVIEW_USECASES_PROXY,
+      useFactory: (logger: LoggerService, repository: ReviewRepository) =>
+        new UseCaseProxy(new DeleteReviewUseCase(logger, repository)),
+      inject: [LoggerService, ReviewRepository],
     },
   ];
 

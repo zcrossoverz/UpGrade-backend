@@ -21,7 +21,6 @@ export class NotificationRepository implements INotificationRepository {
       .set(data)
       .where(where)
       .execute();
-    console.log(data, where);
 
     return result.affected > 0;
   }

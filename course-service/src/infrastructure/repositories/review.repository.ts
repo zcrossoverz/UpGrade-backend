@@ -26,7 +26,7 @@ export class ReviewRepository implements IReviewRepository {
     user_avatar: string,
     user_email: string,
   ): Promise<ReviewM> {
-    if (!course_id || !rate || !user_id || !user_fullname || !user_avatar) {
+    if (!course_id || !rate || !user_id || !user_fullname) {
       throw new RpcException(
         new BadRequestException('field required cannot empty'),
       );

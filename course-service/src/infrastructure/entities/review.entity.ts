@@ -28,7 +28,7 @@ export class Review {
   @Column()
   reviewer_fullname: string;
 
-  @Column()
+  @Column({ nullable: true })
   reviewer_avatar: string;
 
   @Column()

@@ -9,7 +9,6 @@ export class MarkReadNotiUseCases {
 
   async excute(user_id: number, id?: number): Promise<boolean> {
     if (!id) {
-      this.logger.log('dfs', 'update all');
       const result = await this.repository.updateMulti(
         { isRead: false, user_id },
         { isRead: true },

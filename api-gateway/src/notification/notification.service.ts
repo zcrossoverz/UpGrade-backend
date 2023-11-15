@@ -7,7 +7,6 @@ export class NotificationService {
   constructor(@Inject('NOTI_SERVICE') private readonly client: ClientProxy) {}
 
   async getListUnread(user_id: number) {
-    console.log('send request ', user_id);
     return this.client.send(NOTIFICATION_MESSAGE_PATTERNS.getListUnread, {
       user_id,
     });
