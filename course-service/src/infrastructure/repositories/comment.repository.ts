@@ -17,14 +17,23 @@ export class CommentRepository implements ICommentRepository {
     private readonly topicRepository: Repository<Topic>,
   ) {}
   async create(
-    user_id: number,
-    user_fullname: string,
-    user_avatar: string,
-    user_role: enumCommentRole,
     topic_id: number,
+    user_id: number,
+    user_avatar: string,
+    user_fullname: string,
+    user_email: string,
+    user_role: enumCommentRole,
+    text: string,
     parent_id?: number,
   ): Promise<CommentM> {
-    if (!user_id || !user_fullname || !user_avatar || !user_role || !topic_id) {
+    if (
+      !user_id ||
+      !user_fullname ||
+      !user_role ||
+      !topic_id ||
+      !user_email ||
+      !text
+    ) {
       throw new RpcException(
         new BadRequestException('field required cannot empty'),
       );
@@ -36,7 +45,7 @@ export class CommentRepository implements ICommentRepository {
       },
     });
 
-    if (topic) {
+    if (!topic) {
       throw new RpcException(new BadRequestException('topic not found'));
     }
 
@@ -46,7 +55,10 @@ export class CommentRepository implements ICommentRepository {
         user_avatar,
         user_fullname,
         user_role,
+        user_email,
         topic,
+        topic_id,
+        text,
         ...(parent_id !== undefined
           ? {
               parent: await this.repository.findOne({
@@ -58,6 +70,20 @@ export class CommentRepository implements ICommentRepository {
           : {}),
       }),
     );
+
+    if (parent_id) {
+      const parent = await this.repository.findOne({
+        where: {
+          id: parent_id,
+        },
+      });
+
+      if (parent) {
+        parent.children = parent.children || [];
+        parent.children.push(result);
+        this.repository.save(parent);
+      }
+    }
 
     return result;
   }
@@ -75,10 +101,52 @@ export class CommentRepository implements ICommentRepository {
     const result = await this.repository.delete(id);
     return result.affected > 0;
   }
+
+  async react(id: number, isLike: boolean, user_id: number): Promise<boolean> {
+    if (!id || isLike === undefined) {
+      throw new RpcException(new BadRequestException('field missing'));
+    }
+    const comment = await this.repository.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!comment)
+      throw new RpcException(new BadRequestException('comment not found'));
+
+    comment.likes = comment.likes || [];
+    comment.dislikes = comment.dislikes || [];
+
+    if (isLike) {
+      if (comment.likes.some((e) => Number(e) === user_id)) {
+        comment.likes = comment.likes.filter((e) => Number(e) !== user_id);
+        this.repository.save(comment);
+        return true;
+      }
+
+      comment.likes.push(user_id);
+      comment.dislikes = comment.dislikes.filter((e) => Number(e) !== user_id);
+      this.repository.save(comment);
+    } else {
+      if (comment.dislikes.some((e) => Number(e) === user_id)) {
+        comment.dislikes = comment.dislikes.filter(
+          (e) => Number(e) !== user_id,
+        );
+        this.repository.save(comment);
+        return true;
+      }
+      comment.dislikes.push(user_id);
+      comment.likes = comment.likes.filter((e) => Number(e) !== user_id);
+      this.repository.save(comment);
+    }
+    return true;
+  }
+
   async getList(
     filter: IfilterSearch,
   ): Promise<{ datas: CommentM[]; count: number }> {
-    const { limit = 5, page = 1, order, query, exclude } = filter;
+    const { limit = 5, page = 1, order, query, exclude, explicit } = filter;
 
     const offset = (page - 1) * limit;
 
@@ -95,11 +163,21 @@ export class CommentRepository implements ICommentRepository {
       });
     }
 
+    if (explicit) {
+      explicit.forEach(({ key, value }) => {
+        where[key] = value;
+      });
+    }
+
     const [datas, count] = await this.repository.findAndCount({
       where,
       ...(order ? { order: { [order.key]: order.value } } : {}),
       take: limit,
       skip: offset,
+      relations: {
+        parent: true,
+        children: true,
+      },
     });
 
     return {
@@ -111,6 +189,10 @@ export class CommentRepository implements ICommentRepository {
     const result = await this.repository.findOne({
       where: {
         id,
+      },
+      relations: {
+        parent: true,
+        children: true,
       },
     });
     return result;

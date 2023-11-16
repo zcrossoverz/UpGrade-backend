@@ -58,7 +58,7 @@ export class CourseProgressRepository implements ICourseProgressRepository {
   async getList(
     filter: IfilterSearch,
   ): Promise<{ datas: CourseProgressM[]; count: number }> {
-    const { limit = 5, page = 1, order, query, exclude } = filter;
+    const { limit = 5, page = 1, order, query, exclude, explicit } = filter;
 
     const offset = (page - 1) * limit;
 
@@ -72,6 +72,12 @@ export class CourseProgressRepository implements ICourseProgressRepository {
     if (exclude) {
       exclude.forEach(({ key, value }) => {
         where[key] = Not(value);
+      });
+    }
+
+    if (explicit) {
+      explicit.forEach(({ key, value }) => {
+        where[key] = value;
       });
     }
 

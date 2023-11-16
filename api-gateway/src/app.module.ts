@@ -14,6 +14,7 @@ import { TopicModule } from './topic/topic.module';
 import { NotificationModule } from './notification/notification.module';
 import { ReviewModule } from './review/review.module';
 import { NoteModule } from './note/note.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { NoteModule } from './note/note.module';
     TopicModule,
     ReviewModule,
     NoteModule,
+    CommentModule,
     ConfigModule.forRoot({
       load: [configuration],
     }),

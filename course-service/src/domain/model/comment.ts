@@ -12,7 +12,11 @@ export class CommentM {
 
   user_avatar: string;
 
+  user_email: string;
+
   user_role: enumCommentRole;
+
+  topic_id: number;
 
   topic: TopicM;
 

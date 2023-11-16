@@ -48,6 +48,12 @@ import { CreateNoteUseCase } from 'src/usecases/note/add';
 import { NoteRepository } from '../repositories/note.repository';
 import { GetListNoteUseCase } from 'src/usecases/note/getList';
 import { DeleteNoteUseCase } from 'src/usecases/note/delete';
+import { CommentRepository } from '../repositories/comment.repository';
+import { CreateCommentUseCase } from 'src/usecases/comment/create';
+import { UpdateCommentUseCase } from 'src/usecases/comment/update';
+import { GetListCommentUseCase } from 'src/usecases/comment/getList';
+import { DeleteCommentUseCase } from 'src/usecases/comment/delete';
+import { ReactCommentUseCase } from 'src/usecases/comment/react';
 
 export class UseCaseProxy<T> {
   constructor(private readonly useCase: T) {}
@@ -115,6 +121,13 @@ export class UsecasesProxyModule {
   static ADD_NOTE_USECASES_PROXY = 'addNoteUsecasesProxy';
   static GETLIST_NOTE_USECASES_PROXY = 'getListNoteUsecasesProxy';
   static DELETE_NOTE_USECASES_PROXY = 'deleteNoteUsecasesProxy';
+
+  // comment
+  static CREATE_COMMENT_USECASES_PROXY = 'createCommentUsecasesProxy';
+  static UPDATE_COMMENT_USECASES_PROXY = 'updateCommentUsecasesProxy';
+  static GETLIST_COMMENT_USECASES_PROXY = 'getListCommentUsecasesProxy';
+  static REACT_COMMENT_USECASES_PROXY = 'reactCommentUsecasesProxy';
+  static DELETE_COMMENT_USECASES_PROXY = 'deleteCommentUsecasesProxy';
 
   static USE_CASE_PROXY_MAP: {
     provide: string;
@@ -391,6 +404,38 @@ export class UsecasesProxyModule {
       useFactory: (logger: LoggerService, repository: NoteRepository) =>
         new UseCaseProxy(new DeleteNoteUseCase(logger, repository)),
       inject: [LoggerService, NoteRepository],
+    },
+
+    // comment
+    {
+      provide: UsecasesProxyModule.CREATE_COMMENT_USECASES_PROXY,
+      useFactory: (logger: LoggerService, repository: CommentRepository) =>
+        new UseCaseProxy(new CreateCommentUseCase(logger, repository)),
+      inject: [LoggerService, CommentRepository],
+    },
+    {
+      provide: UsecasesProxyModule.UPDATE_COMMENT_USECASES_PROXY,
+      useFactory: (logger: LoggerService, repository: CommentRepository) =>
+        new UseCaseProxy(new UpdateCommentUseCase(logger, repository)),
+      inject: [LoggerService, CommentRepository],
+    },
+    {
+      provide: UsecasesProxyModule.GETLIST_COMMENT_USECASES_PROXY,
+      useFactory: (logger: LoggerService, repository: CommentRepository) =>
+        new UseCaseProxy(new GetListCommentUseCase(logger, repository)),
+      inject: [LoggerService, CommentRepository],
+    },
+    {
+      provide: UsecasesProxyModule.DELETE_COMMENT_USECASES_PROXY,
+      useFactory: (logger: LoggerService, repository: CommentRepository) =>
+        new UseCaseProxy(new DeleteCommentUseCase(logger, repository)),
+      inject: [LoggerService, CommentRepository],
+    },
+    {
+      provide: UsecasesProxyModule.REACT_COMMENT_USECASES_PROXY,
+      useFactory: (logger: LoggerService, repository: CommentRepository) =>
+        new UseCaseProxy(new ReactCommentUseCase(logger, repository)),
+      inject: [LoggerService, CommentRepository],
     },
   ];
 

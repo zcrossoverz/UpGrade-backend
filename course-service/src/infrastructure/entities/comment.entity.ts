@@ -29,11 +29,19 @@ export class Comment {
   @Column()
   user_fullname: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+  })
   user_avatar: string;
 
   @Column()
+  user_email: string;
+
+  @Column()
   user_role: enumCommentRole;
+
+  @Column()
+  topic_id: number;
 
   @ManyToOne(() => Topic, (topic) => topic.comments)
   topic: Topic;

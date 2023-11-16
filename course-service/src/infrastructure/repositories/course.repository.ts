@@ -1,11 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Repository } from 'typeorm';
+import { ILike, Not, Repository } from 'typeorm';
 import { ICourseRepository } from 'src/domain/repositories/courseRepository.interface';
 import { CourseM, typeStatusCourse } from 'src/domain/model/course';
 import { Course } from '../entities/course.entity';
 import { Category } from '../entities/category.entity';
 import { RpcException } from '@nestjs/microservices';
+import { IfilterSearch } from 'src/domain/constant/constant';
 
 @Injectable()
 export class CourseRepository implements ICourseRepository {
@@ -74,19 +75,10 @@ export class CourseRepository implements ICourseRepository {
     return result;
   }
 
-  async getList(filter: {
-    limit?: number;
-    page?: number;
-    order?: {
-      key: string;
-      value: string;
-    };
-    query?: {
-      key: string;
-      value: string;
-    }[];
-  }): Promise<{ datas: CourseM[]; count: number }> {
-    const { limit = 5, page = 1, order, query } = filter;
+  async getList(
+    filter: IfilterSearch,
+  ): Promise<{ datas: CourseM[]; count: number }> {
+    const { limit = 5, page = 1, order, query, exclude, explicit } = filter;
 
     const offset = (page - 1) * limit;
 
@@ -94,6 +86,18 @@ export class CourseRepository implements ICourseRepository {
     if (query) {
       query.forEach(({ key, value }) => {
         where[key] = ILike(`%${value}%`);
+      });
+    }
+
+    if (exclude) {
+      exclude.forEach(({ key, value }) => {
+        where[key] = Not(value);
+      });
+    }
+
+    if (explicit) {
+      explicit.forEach(({ key, value }) => {
+        where[key] = value;
       });
     }
 
