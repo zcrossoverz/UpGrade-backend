@@ -48,6 +48,12 @@ export class Course {
   @Column({ type: 'simple-array', nullable: true })
   members_id: number[];
 
+  @Column({ nullable: true })
+  rate: string;
+
+  @Column({ nullable: true, default: 0 })
+  rate_number: number;
+
   @Column()
   status: typeStatusCourse;
 

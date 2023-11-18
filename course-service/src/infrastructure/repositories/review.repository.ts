@@ -54,6 +54,26 @@ export class ReviewRepository implements IReviewRepository {
       }),
     );
 
+    const [data, count] = await this.repository.findAndCount({
+      where: {
+        course_id,
+      },
+    });
+
+    const totalRate = data.reduce((sum, review) => {
+      if (review.hasOwnProperty('rate')) {
+        return sum + review.rate;
+      } else {
+        return sum;
+      }
+    }, 0);
+
+    const newRate = `${parseFloat((totalRate / count).toFixed(1))}`;
+
+    course.rate = newRate;
+    course.rate_number = count;
+    this.courseRepository.save(course);
+
     return result;
   }
 
@@ -62,6 +82,40 @@ export class ReviewRepository implements IReviewRepository {
       throw new RpcException(new BadRequestException('id is required'));
     }
     const result = await this.repository.update(id, { ...data });
+
+    const review = await this.repository.findOne({
+      where: {
+        id,
+      },
+    });
+    const course_id = review.course_id;
+
+    const [listReview, count] = await this.repository.findAndCount({
+      where: {
+        course_id,
+      },
+    });
+
+    const totalRate = listReview.reduce((sum, review) => {
+      if (review.hasOwnProperty('rate')) {
+        return sum + review.rate;
+      } else {
+        return sum;
+      }
+    }, 0);
+
+    const newRate = `${parseFloat((totalRate / count).toFixed(1))}`;
+
+    this.courseRepository.update(
+      {
+        id: course_id,
+      },
+      {
+        rate: newRate,
+        rate_number: count,
+      },
+    );
+
     return result.affected > 0;
   }
   async delete(id: number): Promise<boolean> {

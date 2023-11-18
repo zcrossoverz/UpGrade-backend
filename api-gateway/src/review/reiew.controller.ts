@@ -44,8 +44,10 @@ export class ReviewController {
     return this.service.deleteReview(id);
   }
 
+  @UseGuards(AuthGuard)
   @Post('/get-list')
-  getList(@Body() data: IfilterSearch) {
-    return this.service.getList(data);
+  getList(@Body() data: IfilterSearch, @Request() request) {
+    const { user } = request;
+    return this.service.getList(data, user.id);
   }
 }

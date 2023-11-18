@@ -41,9 +41,10 @@ export class ReviewService {
     });
   }
 
-  async getList(filter: IfilterSearch) {
+  async getList(filter: IfilterSearch, user_id: number) {
     return this.client.send(REVIEW_MESSAGE_PATTERNS.getList, {
       filter,
+      user_id,
     });
   }
 }

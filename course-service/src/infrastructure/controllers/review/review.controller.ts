@@ -95,10 +95,11 @@ export class ReviewController {
     @Payload()
     payload: {
       filter: IfilterSearch;
+      user_id: number;
     },
   ) {
-    const { filter } = payload;
-    const result = await this.getList.getInstance().excute(filter);
+    const { filter, user_id } = payload;
+    const result = await this.getList.getInstance().excute(filter, user_id);
     return result;
   }
 }
