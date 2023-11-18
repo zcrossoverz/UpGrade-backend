@@ -1,6 +1,7 @@
 import { Controller, Post, Body, UseGuards, Request } from '@nestjs/common';
 import { AuthGuard } from 'src/common/guards/auth';
 import { CommentService } from './comment.service';
+import { IfilterSearch } from 'src/common/interface/filterSearch';
 
 @Controller('comment')
 export class CommentController {
@@ -31,17 +32,8 @@ export class CommentController {
   }
 
   @Post('/get-list')
-  getList(@Body() data: { topic_id: number }) {
-    const { topic_id } = data;
-
-    return this.service.getList({
-      explicit: [
-        {
-          key: 'topic_id',
-          value: topic_id,
-        },
-      ],
-    });
+  getList(@Body() data: IfilterSearch) {
+    return this.service.getList(data);
   }
 
   @UseGuards(AuthGuard)

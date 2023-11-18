@@ -46,10 +46,13 @@ export class Comment {
   @ManyToOne(() => Topic, (topic) => topic.comments)
   topic: Topic;
 
-  @ManyToOne(() => Comment, { nullable: true })
+  @ManyToOne(() => Comment, { nullable: true, onDelete: 'CASCADE' })
   parent: Comment;
 
-  @OneToMany(() => Comment, (child) => child.parent, { nullable: true })
+  @OneToMany(() => Comment, (child) => child.parent, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
   children: Comment[];
 
   @Column({ type: 'simple-array', nullable: true })
