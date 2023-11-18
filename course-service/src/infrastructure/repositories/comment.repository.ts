@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Not, Repository } from 'typeorm';
+import { ILike, IsNull, Not, Repository } from 'typeorm';
 import { ICommentRepository } from 'src/domain/repositories/commentRepository.interface';
 import { Comment, enumCommentRole } from '../entities/comment.entity';
 import { Topic } from '../entities/topic.entity';
@@ -168,6 +168,8 @@ export class CommentRepository implements ICommentRepository {
         where[key] = value;
       });
     }
+
+    where.parent = IsNull();
 
     const [datas, count] = await this.repository.findAndCount({
       where,
