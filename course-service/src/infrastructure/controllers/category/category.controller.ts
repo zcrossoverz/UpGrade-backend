@@ -26,8 +26,6 @@ export class CategoryController {
 
   @MessagePattern(CATEGORY_MESSAGE_PATTERNS.create)
   async create(@Payload() createCategoryDto: CreateCategoryDto) {
-    console.log('ok');
-
     const { name, description } = createCategoryDto;
     const category = await this.createUsecase
       .getInstance()

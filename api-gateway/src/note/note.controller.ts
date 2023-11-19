@@ -38,6 +38,10 @@ export class NoteController {
           value: topic_id,
         },
       ],
+      order: {
+        key: 'id',
+        value: 'DESC',
+      },
     });
   }
 

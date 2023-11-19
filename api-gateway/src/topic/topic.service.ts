@@ -38,7 +38,6 @@ export class TopicService {
     );
 
     if (JSON.stringify(uploadVideo).length > 50) {
-      console.log(uploadVideo);
       throw new BadRequestException('video upload failed');
     }
     const video_url = await this.gdrive.getLinkVideo(uploadVideo);

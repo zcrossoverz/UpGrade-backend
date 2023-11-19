@@ -93,8 +93,6 @@ export class NotificationRepository implements INotificationRepository {
       skip: offset,
     });
 
-    console.log(datas, count);
-
     return {
       datas,
       count,

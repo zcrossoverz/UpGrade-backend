@@ -139,7 +139,6 @@ export class GDrive {
         {
           // Use the resumable option
           onUploadProgress: (evt) => {
-            // Log the progress
             const progress = (evt.bytesRead / file.buffer.length) * 100;
             console.log(`${progress}% completed`);
           },
