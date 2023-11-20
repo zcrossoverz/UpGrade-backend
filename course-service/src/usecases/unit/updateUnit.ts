@@ -7,8 +7,8 @@ export class UpdateUnitUseCase {
     private readonly unitRepository: IUnitRepository,
   ) {}
 
-  async excute(unit_id: number, title: string) {
-    const result = this.unitRepository.update(unit_id, title);
+  async excute(unit_id: number, title: string, status) {
+    const result = this.unitRepository.update(unit_id, title, status);
     return result;
   }
 }

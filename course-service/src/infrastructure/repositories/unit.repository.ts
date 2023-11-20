@@ -42,13 +42,14 @@ export class UnitRepository implements IUnitRepository {
 
     return result;
   }
-  async update(unit_id: number, title: string): Promise<boolean> {
+  async update(unit_id: number, title: string, status): Promise<boolean> {
     const result = await this.unitRepository.update(
       {
         id: unit_id,
       },
       {
         title,
+        status,
       },
     );
     return result.affected > 0;

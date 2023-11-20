@@ -38,11 +38,13 @@ export class UnitController {
   }
 
   @MessagePattern(UNIT_MESSAGE_PATTERNS.update)
-  async update(@Payload() updateDto: { unit_id: number; title: string }) {
-    const { unit_id, title } = updateDto;
+  async update(
+    @Payload() updateDto: { unit_id: number; title: string; status: string },
+  ) {
+    const { unit_id, title, status } = updateDto;
     const result = await this.updateUsecase
       .getInstance()
-      .excute(unit_id, title);
+      .excute(unit_id, title, status);
     return result;
   }
 

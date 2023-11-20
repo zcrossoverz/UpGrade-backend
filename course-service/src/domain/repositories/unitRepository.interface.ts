@@ -6,6 +6,6 @@ export interface IUnitRepository {
     course_id: number,
     drive_folder_unit_id: string,
   ): Promise<UnitM>;
-  update(unit_id: number, title: string): Promise<boolean>;
+  update(unit_id: number, title: string, status: string): Promise<boolean>;
   delete(unit_id: number): Promise<boolean>;
 }

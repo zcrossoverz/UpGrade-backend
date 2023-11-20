@@ -20,8 +20,14 @@ export class UnitController {
   }
 
   @Post('/update')
-  update(@Body() updateDto: { title: string; unit_id: number }) {
-    return this.unitService.update(updateDto.title, updateDto.unit_id);
+  update(
+    @Body() updateDto: { title: string; unit_id: number; status: string },
+  ) {
+    return this.unitService.update(
+      updateDto.title,
+      updateDto.unit_id,
+      updateDto.status,
+    );
   }
 
   @Post('/delete/:id')

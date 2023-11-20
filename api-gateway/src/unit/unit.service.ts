@@ -27,10 +27,11 @@ export class UnitService {
     });
   }
 
-  async update(title: string, unit_id: number) {
+  async update(title: string, unit_id: number, status: string) {
     return this.client.send(UNIT_MESSAGE_PATTERNS.update, {
       title,
       unit_id,
+      status,
     });
   }
 
