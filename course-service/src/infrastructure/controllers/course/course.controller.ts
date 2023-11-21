@@ -120,11 +120,12 @@ export class CourseController {
     data: {
       course_id: number;
       user_id: number;
+      user_fullname: string;
     },
   ) {
     const result = await this.enrollCoursesUsecaseProxy
       .getInstance()
-      .excute(data.course_id, data.user_id);
+      .excute(data.course_id, data.user_id, data.user_fullname);
     return result;
   }
 

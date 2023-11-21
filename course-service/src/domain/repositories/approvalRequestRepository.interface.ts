@@ -1,3 +1,4 @@
+import { IfilterSearch } from '../constant/constant';
 import { ApprovalRequestM } from '../model/approvalRequest';
 
 export interface IApprovalRequestRepository {
@@ -8,6 +9,8 @@ export interface IApprovalRequestRepository {
   ): Promise<ApprovalRequestM>;
   update(id: number, data: any): Promise<boolean>;
   delete(id: number): Promise<boolean>;
-  getList(): Promise<{ datas: ApprovalRequestM[]; count: number }>;
+  getList(
+    filter: IfilterSearch,
+  ): Promise<{ datas: ApprovalRequestM[]; count: number }>;
   get(id: number): Promise<ApprovalRequestM>;
 }

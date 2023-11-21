@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserM } from 'src/domain/model/user';
+import { ROLE, UserM } from 'src/domain/model/user';
 import { IUserRepository } from 'src/domain/repositories/userRepository.interface';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
@@ -17,6 +17,9 @@ export class DatabaseUserRepository implements IUserRepository {
     const userNew = new User();
     userNew.email = user.email;
     userNew.password = user.password;
+    userNew.firstName = user.firstName;
+    userNew.lastName = user.lastName;
+    userNew.role = ROLE.USER;
     const result = await this.userEntityRepository.save(userNew);
     return result;
   }

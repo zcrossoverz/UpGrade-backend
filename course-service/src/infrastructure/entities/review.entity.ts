@@ -13,7 +13,9 @@ export class Review {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Course, (course) => course.reviews)
+  @ManyToOne(() => Course, (course) => course.reviews, {
+    onDelete: 'CASCADE',
+  })
   course: Course;
 
   @Column()

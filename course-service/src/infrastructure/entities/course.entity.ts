@@ -70,10 +70,14 @@ export class Course {
   @OneToMany(() => Unit, (unit) => unit.course)
   units: Unit[];
 
-  @ManyToMany(() => Member)
+  @ManyToMany(() => Member, {
+    onDelete: 'CASCADE',
+  })
   @JoinTable()
   members: Member[];
 
-  @OneToMany(() => Review, (review) => review.course)
+  @OneToMany(() => Review, (review) => review.course, {
+    onDelete: 'CASCADE',
+  })
   reviews: Review[];
 }

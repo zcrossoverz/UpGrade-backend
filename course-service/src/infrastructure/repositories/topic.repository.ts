@@ -5,7 +5,7 @@ import { Unit } from '../entities/unit.entity';
 import { RpcException } from '@nestjs/microservices';
 import { ITopicRepository } from 'src/domain/repositories/topicRepository.interface';
 import { Topic } from '../entities/topic.entity';
-import { TopicM } from 'src/domain/model/topic';
+import { TopicM, typeStatusTopic } from 'src/domain/model/topic';
 
 @Injectable()
 export class TopicRepository implements ITopicRepository {
@@ -90,6 +90,7 @@ export class TopicRepository implements ITopicRepository {
     id: number,
     title: string,
     description: string,
+    status: typeStatusTopic,
   ): Promise<boolean> {
     const result = await this.topicRepository.update(
       {
@@ -98,6 +99,7 @@ export class TopicRepository implements ITopicRepository {
       {
         title,
         description,
+        status,
       },
     );
     return result.affected > 0;

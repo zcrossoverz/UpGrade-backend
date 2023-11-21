@@ -21,19 +21,27 @@ export class CourseProgress {
   @Column()
   user_id: number;
 
-  @ManyToOne(() => Course, (course) => course.id)
+  @ManyToOne(() => Course, (course) => course.id, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   course: Course;
 
-  @ManyToOne(() => Topic, (topic) => topic, { nullable: true })
+  @ManyToOne(() => Topic, (topic) => topic, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   currentTopic: Topic;
 
-  @ManyToOne(() => Library, (library) => library.courses, { nullable: true })
+  @ManyToOne(() => Library, (library) => library.courses, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   library: Library;
 
-  @ManyToMany(() => Topic, { nullable: true })
+  @ManyToMany(() => Topic, { nullable: true, onDelete: 'CASCADE' })
   @JoinTable()
   topicCompleted: Topic[];
 

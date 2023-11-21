@@ -54,6 +54,7 @@ export class TopicService {
     topic_id: number;
     title: string;
     description: string;
+    status: string;
   }) {
     return this.client.send(TOPIC_MESSAGE_PATTERNS.update, {
       ...updateDto,

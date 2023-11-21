@@ -64,10 +64,10 @@ export class UserController {
     action: 'create-user',
   })
   async createUser(@Payload() createUserDto: CreateUserDto) {
-    const { email, password } = createUserDto;
+    const { email, password, firstName, lastName } = createUserDto;
     const result = await this.createUserUsecasesProxy
       .getInstance()
-      .execute(email, password);
+      .execute(email, password, firstName, lastName);
 
     return new UserPresenter(result);
   }

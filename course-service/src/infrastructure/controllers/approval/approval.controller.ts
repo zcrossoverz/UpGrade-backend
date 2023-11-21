@@ -57,8 +57,8 @@ export class ApprovalRequestController {
   }
 
   @MessagePattern(APPROVAL_REQUEST_MESSAGE_PATTERNS.getListApprovalRequest)
-  async getList() {
-    const result = await this.getListUsecase.getInstance().excute();
+  async getList(@Payload() filter) {
+    const result = await this.getListUsecase.getInstance().excute(filter);
     return result;
   }
 }

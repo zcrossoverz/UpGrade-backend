@@ -18,6 +18,7 @@ export interface ITopicRepository {
     topic_id: number,
     title: string,
     description: string,
+    status: string,
   ): Promise<boolean>;
   delete(topic_id: number): Promise<boolean>;
   getFolderDriveId(topic_id: number): Promise<string>;

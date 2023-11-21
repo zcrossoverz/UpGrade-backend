@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Not, Repository } from 'typeorm';
 import { IApprovalRequestRepository } from 'src/domain/repositories/approvalRequestRepository.interface';
 import {
   ApprovalRequestM,
@@ -10,6 +10,8 @@ import { RpcException } from '@nestjs/microservices';
 import { ApprovalRequest } from '../entities/approvalRequest.entity';
 import { Course } from '../entities/course.entity';
 import { typeStatusCourse } from 'src/domain/model/course';
+import { IfilterSearch } from 'src/domain/constant/constant';
+import { Notification } from '../entities/notification.entity';
 
 @Injectable()
 export class ApprovalRequestRepository implements IApprovalRequestRepository {
@@ -18,6 +20,8 @@ export class ApprovalRequestRepository implements IApprovalRequestRepository {
     private readonly approvalRequestRepository: Repository<ApprovalRequest>,
     @InjectRepository(Course)
     private readonly courseRepository: Repository<Course>,
+    @InjectRepository(Notification)
+    private readonly notiRepository: Repository<Notification>,
   ) {}
   async create(
     instructor_id: number,
@@ -53,6 +57,14 @@ export class ApprovalRequestRepository implements IApprovalRequestRepository {
       {
         status: typeStatusCourse.SUBMIT,
       },
+    );
+    this.notiRepository.save(
+      this.notiRepository.create({
+        user_id: 1,
+        text: `${instructor_username} vừa gửi yêu cầu phê duyệt khóa học ${course.title}!`,
+        href: '/admin/approval-request',
+        isRead: false,
+      }),
     );
 
     return result;
@@ -90,8 +102,38 @@ export class ApprovalRequestRepository implements IApprovalRequestRepository {
     const result = await this.approvalRequestRepository.delete(id);
     return result.affected > 0;
   }
-  async getList(): Promise<{ datas: ApprovalRequestM[]; count: number }> {
-    const [datas, count] = await this.approvalRequestRepository.findAndCount();
+  async getList(
+    filter: IfilterSearch,
+  ): Promise<{ datas: ApprovalRequestM[]; count: number }> {
+    const { limit = 5, page = 1, order, query, exclude, explicit } = filter;
+
+    const offset = (page - 1) * limit;
+
+    const where: Record<string, any> = {};
+    if (query) {
+      query.forEach(({ key, value }) => {
+        where[key] = ILike(`%${value}%`);
+      });
+    }
+
+    if (exclude) {
+      exclude.forEach(({ key, value }) => {
+        where[key] = Not(value);
+      });
+    }
+
+    if (explicit) {
+      explicit.forEach(({ key, value }) => {
+        where[key] = value;
+      });
+    }
+
+    const [datas, count] = await this.approvalRequestRepository.findAndCount({
+      where,
+      ...(order ? { order: { [order.key]: order.value } } : {}),
+      take: limit,
+      skip: offset,
+    });
     return { datas, count };
   }
   async get(id: number): Promise<ApprovalRequestM> {

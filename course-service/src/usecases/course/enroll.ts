@@ -15,7 +15,11 @@ export class EnrollCourseUseCase {
     private readonly notificationRepository: INotificationRepository,
   ) {}
 
-  async excute(course_id: number, user_id: number): Promise<boolean> {
+  async excute(
+    course_id: number,
+    user_id: number,
+    user_fullname: string,
+  ): Promise<boolean> {
     if (!course_id || !user_id) {
       throw new RpcException(
         new BadGatewayException('course id and user id is required'),
@@ -38,12 +42,13 @@ export class EnrollCourseUseCase {
     this.libraryRepository.add(user_id, courseProgress.id);
     this.notificationRepository.create(
       course.instructor_id,
-      `user ${user_id} vua dang ky khoa hoc cua ban`,
+      `Người dùng ${user_fullname} vừa đăng ký khóa học của bạn!`,
       'test',
     );
+
     this.notificationRepository.create(
       user_id,
-      `ban da dang ky khoa hoc thanh cong`,
+      `Chúc mừng! bạn đã đăng ký khóa học ${course.title} thành công!!`,
       'test',
     );
 

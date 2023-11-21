@@ -25,7 +25,9 @@ export class Note {
   @Column()
   topic_id: number;
 
-  @ManyToOne(() => Topic, (topic) => topic.notes)
+  @ManyToOne(() => Topic, (topic) => topic.notes, {
+    onDelete: 'CASCADE',
+  })
   topic: Topic;
 
   @CreateDateColumn()

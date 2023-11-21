@@ -43,7 +43,7 @@ export class Comment {
   @Column()
   topic_id: number;
 
-  @ManyToOne(() => Topic, (topic) => topic.comments)
+  @ManyToOne(() => Topic, (topic) => topic.comments, { onDelete: 'CASCADE' })
   topic: Topic;
 
   @ManyToOne(() => Comment, { nullable: true, onDelete: 'CASCADE' })

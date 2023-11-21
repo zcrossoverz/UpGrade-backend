@@ -11,6 +11,7 @@ import { UpdateTopicUseCase } from 'src/usecases/topic/updateTopic';
 import { DeleteTopicUseCase } from 'src/usecases/topic/deleteTopic';
 import { GetTopicUseCase } from 'src/usecases/topic/getTopic';
 import { GetListTopicUseCase } from 'src/usecases/topic/getListTopic';
+import { typeStatusTopic } from 'src/domain/model/topic';
 
 @Controller()
 export class TopicController {
@@ -54,12 +55,13 @@ export class TopicController {
       topic_id: number;
       title: string;
       description: string;
+      status: typeStatusTopic;
     },
   ) {
-    const { topic_id, title, description } = updateDto;
+    const { topic_id, title, description, status } = updateDto;
     const result = await this.updateUsecase
       .getInstance()
-      .excute(topic_id, title, description);
+      .excute(topic_id, title, description, status);
     return result;
   }
 

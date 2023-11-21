@@ -1,3 +1,4 @@
+import { IfilterSearch } from '../constant/constant';
 import { CourseM } from '../model/course';
 
 export interface ICourseRepository {
@@ -11,18 +12,7 @@ export interface ICourseRepository {
     instructor_fullname: string,
   ): Promise<CourseM>;
   getCourse(id: number): Promise<CourseM>;
-  getList(filter: {
-    limit?: number;
-    page?: number;
-    order?: {
-      key: string;
-      value: string;
-    };
-    query?: {
-      key: string;
-      value: string;
-    }[];
-  }): Promise<{ datas: CourseM[]; count: number }>;
+  getList(filter: IfilterSearch): Promise<{ datas: CourseM[]; count: number }>;
   getListByKey(
     key: string,
     value: any,

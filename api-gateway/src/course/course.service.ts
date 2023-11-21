@@ -7,6 +7,7 @@ import {
 import { ClientProxy } from '@nestjs/microservices';
 import { GDrive } from 'src/common/gdrive/gdrive';
 import * as crypto from 'crypto';
+import { IfilterSearch } from 'src/common/interface/filterSearch';
 
 enum enumApprovalStatus {
   PENDING = 'Pending',
@@ -111,10 +112,12 @@ export class CourseService {
     );
   }
 
-  getListApprovalRequest() {
+  getListApprovalRequest(filter: IfilterSearch) {
     return this.client.send(
       APPROVAL_REQUEST_MESSAGE_PATTERNS.getListApprovalRequest,
-      {},
+      {
+        ...filter,
+      },
     );
   }
 
@@ -132,10 +135,11 @@ export class CourseService {
     });
   }
 
-  enrollCourse(course_id: number, user_id: number) {
+  enrollCourse(course_id: number, user_id: number, user_fullname: string) {
     return this.client.send(COURSE_MESSAGE_PATTERNS.enroll, {
       course_id,
       user_id,
+      user_fullname,
     });
   }
 

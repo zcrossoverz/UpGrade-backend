@@ -13,6 +13,7 @@ import { CourseService } from './course.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { AuthGuard } from 'src/common/guards/auth';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { IfilterSearch } from 'src/common/interface/filterSearch';
 
 @Controller('course')
 export class CourseController {
@@ -116,8 +117,11 @@ export class CourseController {
   }
 
   @Post('/get-approval-list')
-  getApprovalList() {
-    return this.courseService.getListApprovalRequest();
+  getApprovalList(
+    @Body()
+    filter: IfilterSearch,
+  ) {
+    return this.courseService.getListApprovalRequest(filter);
   }
 
   @Post('/delete/:id')
@@ -135,7 +139,11 @@ export class CourseController {
     },
   ) {
     const { user } = request;
-    return this.courseService.enrollCourse(data.course_id, user.id);
+    return this.courseService.enrollCourse(
+      data.course_id,
+      user.id,
+      user.firstName + ' ' + user.lastName,
+    );
   }
 
   @Post('/get-library')

@@ -37,7 +37,13 @@ export class TopicController {
 
   @Post('/update')
   update(
-    @Body() updateDto: { topic_id: number; title: string; description: string },
+    @Body()
+    updateDto: {
+      topic_id: number;
+      title: string;
+      description: string;
+      status: string;
+    },
   ) {
     return this.topicService.update(updateDto);
   }

@@ -11,10 +11,14 @@ export class GetMyCoursesUseCase {
   async excute(
     instructor_id: number,
   ): Promise<{ datas: CourseM[]; count: number }> {
-    const result = await this.courseRepository.getListByKey(
-      'instructor_id',
-      instructor_id,
-    );
+    const result = await this.courseRepository.getList({
+      explicit: [
+        {
+          key: 'instructor_id',
+          value: instructor_id,
+        },
+      ],
+    });
     this.logger.log('GetListCoursesUseCase execute', 'return list course');
     return result;
   }

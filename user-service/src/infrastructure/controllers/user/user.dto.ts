@@ -6,6 +6,12 @@ export class CreateUserDto {
 
   @IsString()
   readonly email: string;
+
+  @IsString()
+  readonly firstName: string;
+
+  @IsString()
+  readonly lastName: string;
 }
 
 export class UpdateUserDto {

@@ -71,6 +71,15 @@ export class CourseRepository implements ICourseRepository {
           topics: true,
         },
       },
+      order: {
+        id: 'ASC',
+        units: {
+          id: 'ASC',
+          topics: {
+            id: 'ASC',
+          },
+        },
+      },
     });
     return result;
   }

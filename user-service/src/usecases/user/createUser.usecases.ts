@@ -11,10 +11,15 @@ export class CreateUserUseCases {
     private readonly userRepository: IUserRepository,
     private readonly bcrypt: IBcryptJS,
   ) {}
-  async execute(email: string, password: string): Promise<UserM> {
-    if (!email || !password) {
+  async execute(
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string,
+  ): Promise<UserM> {
+    if (!email || !password || !firstName || !lastName) {
       throw new RpcException(
-        new BadRequestException('email and password cannot empty!'),
+        new BadRequestException('all field are required!'),
       );
     }
 
@@ -28,7 +33,8 @@ export class CreateUserUseCases {
     const user = new UserM();
     user.email = email;
     user.password = this.bcrypt.hashSync(password, 8);
-    // this.logger.log('createUserUsecases execute', JSON.stringify(user));
+    user.firstName = firstName;
+    user.lastName = lastName;
 
     const result = await this.userRepository.create(user);
 
