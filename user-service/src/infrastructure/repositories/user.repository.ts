@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ROLE, UserM } from 'src/domain/model/user';
 import { IUserRepository } from 'src/domain/repositories/userRepository.interface';
-import { Repository } from 'typeorm';
+import { ILike, Not, Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { UpdateUserDto } from 'src/domain/dto/updateUserDto';
+import { IfilterSearch } from 'src/domain/common/filter';
 
 @Injectable()
 export class DatabaseUserRepository implements IUserRepository {
@@ -23,9 +24,43 @@ export class DatabaseUserRepository implements IUserRepository {
     const result = await this.userEntityRepository.save(userNew);
     return result;
   }
-  async findAll(): Promise<UserM[]> {
-    const result = await this.userEntityRepository.find();
-    return result;
+  async findAll(
+    filter: IfilterSearch,
+  ): Promise<{ datas: UserM[]; count: number }> {
+    const { limit = 5, page = 1, order, query, exclude, explicit } = filter;
+
+    const offset = (page - 1) * limit;
+
+    const where: Record<string, any> = {};
+    if (query) {
+      query.forEach(({ key, value }) => {
+        where[key] = ILike(`%${value}%`);
+      });
+    }
+
+    if (exclude) {
+      exclude.forEach(({ key, value }) => {
+        where[key] = Not(value);
+      });
+    }
+
+    if (explicit) {
+      explicit.forEach(({ key, value }) => {
+        where[key] = value;
+      });
+    }
+
+    const [datas, count] = await this.userEntityRepository.findAndCount({
+      where,
+      ...(order ? { order: { [order.key]: order.value } } : {}),
+      take: limit,
+      skip: offset,
+    });
+
+    return {
+      datas,
+      count,
+    };
   }
   async findById(id: number): Promise<UserM> {
     const result = await this.userEntityRepository.findOneBy({

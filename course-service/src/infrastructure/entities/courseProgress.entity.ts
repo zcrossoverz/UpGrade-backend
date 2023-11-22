@@ -21,6 +21,9 @@ export class CourseProgress {
   @Column()
   user_id: number;
 
+  @Column({ nullable: true })
+  course_id: number;
+
   @ManyToOne(() => Course, (course) => course.id, {
     onDelete: 'CASCADE',
   })

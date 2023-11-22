@@ -65,8 +65,8 @@ export class TopicService {
     return this.client.send(TOPIC_MESSAGE_PATTERNS.delete, { id });
   }
 
-  async getOne(id: number) {
-    return this.client.send(TOPIC_MESSAGE_PATTERNS.getOne, { id });
+  async getOne(id: number, user_id: number) {
+    return this.client.send(TOPIC_MESSAGE_PATTERNS.getOne, { id, user_id });
   }
 
   async getList(query: { unit_id: number }) {

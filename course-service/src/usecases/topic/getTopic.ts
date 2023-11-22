@@ -7,8 +7,8 @@ export class GetTopicUseCase {
     private readonly topicRepository: ITopicRepository,
   ) {}
 
-  async excute(topic_id: number) {
-    const result = this.topicRepository.getTopic(topic_id);
+  async excute(topic_id: number, user_id: number) {
+    const result = this.topicRepository.getTopic(topic_id, user_id);
     return result;
   }
 }

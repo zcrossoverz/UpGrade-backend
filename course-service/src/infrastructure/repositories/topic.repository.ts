@@ -6,6 +6,7 @@ import { RpcException } from '@nestjs/microservices';
 import { ITopicRepository } from 'src/domain/repositories/topicRepository.interface';
 import { Topic } from '../entities/topic.entity';
 import { TopicM, typeStatusTopic } from 'src/domain/model/topic';
+import { CourseProgress } from '../entities/courseProgress.entity';
 
 @Injectable()
 export class TopicRepository implements ITopicRepository {
@@ -14,6 +15,8 @@ export class TopicRepository implements ITopicRepository {
     private readonly unitRepository: Repository<Unit>,
     @InjectRepository(Topic)
     private readonly topicRepository: Repository<Topic>,
+    @InjectRepository(CourseProgress)
+    private readonly progressRepository: Repository<CourseProgress>,
   ) {}
   async create(
     title: string,
@@ -51,11 +54,29 @@ export class TopicRepository implements ITopicRepository {
       }),
     );
   }
-  async getTopic(topic_id: number): Promise<TopicM> {
+  async getTopic(topic_id: number, user_id: number): Promise<TopicM> {
     if (!topic_id) {
       throw new RpcException(new BadRequestException('topic id is required'));
     }
-    const result = await this.topicRepository.findOneBy({ id: topic_id });
+    const result = await this.topicRepository.findOne({
+      where: { id: topic_id },
+      relations: {
+        unit: {
+          course: true,
+        },
+      },
+    });
+    const course = result.unit.course;
+    const progress = await this.progressRepository.findOne({
+      where: {
+        course: {
+          id: course.id,
+        },
+        user_id,
+      },
+    });
+    progress.currentTopic = result;
+    this.progressRepository.save(progress);
     return result;
   }
   async getListTopic(

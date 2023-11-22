@@ -72,8 +72,10 @@ export class TopicController {
   }
 
   @MessagePattern(TOPIC_MESSAGE_PATTERNS.getOne)
-  async getOne(@Payload('id', ParseIntPipe) id: number) {
-    const result = await this.getOneUsecase.getInstance().excute(id);
+  async getOne(@Payload() data: { id: number; user_id: number }) {
+    const result = await this.getOneUsecase
+      .getInstance()
+      .excute(data.id, data.user_id);
     return result;
   }
 

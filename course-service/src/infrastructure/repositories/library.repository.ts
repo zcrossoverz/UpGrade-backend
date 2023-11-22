@@ -1,9 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Not, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { RpcException } from '@nestjs/microservices';
 import { CourseProgress } from '../entities/courseProgress.entity';
-import { IfilterSearch } from 'src/domain/constant/constant';
 import { ILibraryRepository } from 'src/domain/repositories/libraryRepository.interface';
 import { Library } from '../entities/library.entity';
 import { LibraryM } from 'src/domain/model/library';
@@ -74,44 +73,44 @@ export class LibraryRepository implements ILibraryRepository {
     const result = await this.repository.delete(id);
     return result.affected > 0;
   }
-  async getList(
-    filter: IfilterSearch,
-  ): Promise<{ datas: LibraryM[]; count: number }> {
-    const { limit = 5, page = 1, order, query, exclude, explicit } = filter;
+  // async getList(
+  //   filter: IfilterSearch,
+  // ): Promise<{ datas: LibraryM[]; count: number }> {
+  //   const { limit = 5, page = 1, order, query, exclude, explicit } = filter;
 
-    const offset = (page - 1) * limit;
+  //   const offset = (page - 1) * limit;
 
-    const where: Record<string, any> = {};
-    if (query) {
-      query.forEach(({ key, value }) => {
-        where[key] = ILike(`%${value}%`);
-      });
-    }
+  //   const where: Record<string, any> = {};
+  //   if (query) {
+  //     query.forEach(({ key, value }) => {
+  //       where[key] = ILike(`%${value}%`);
+  //     });
+  //   }
 
-    if (exclude) {
-      exclude.forEach(({ key, value }) => {
-        where[key] = Not(value);
-      });
-    }
+  //   if (exclude) {
+  //     exclude.forEach(({ key, value }) => {
+  //       where[key] = Not(value);
+  //     });
+  //   }
 
-    if (explicit) {
-      explicit.forEach(({ key, value }) => {
-        where[key] = value;
-      });
-    }
+  //   if (explicit) {
+  //     explicit.forEach(({ key, value }) => {
+  //       where[key] = value;
+  //     });
+  //   }
 
-    const [datas, count] = await this.repository.findAndCount({
-      where,
-      ...(order ? { order: { [order.key]: order.value } } : {}),
-      take: limit,
-      skip: offset,
-    });
+  //   const [datas, count] = await this.repository.findAndCount({
+  //     where,
+  //     ...(order ? { order: { [order.key]: order.value } } : {}),
+  //     take: limit,
+  //     skip: offset,
+  //   });
 
-    return {
-      datas,
-      count,
-    };
-  }
+  //   return {
+  //     datas,
+  //     count,
+  //   };
+  // }
   async get(user_id: number): Promise<LibraryM> {
     const result = await this.repository.findOne({
       where: {
@@ -129,6 +128,6 @@ export class LibraryRepository implements ILibraryRepository {
         },
       },
     });
-    return result;
+    return { ...result, count: result.courses.length };
   }
 }

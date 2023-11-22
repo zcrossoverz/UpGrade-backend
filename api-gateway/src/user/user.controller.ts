@@ -13,6 +13,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from 'src/common/guards/auth';
+import { IfilterSearch } from 'src/common/interface/filterSearch';
 
 @Controller('user')
 export class UserController {
@@ -23,9 +24,9 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  @Get('/getList')
-  findAll() {
-    return this.userService.getList();
+  @Post('/get-list')
+  findAll(@Body() filter: IfilterSearch) {
+    return this.userService.getList(filter);
   }
 
   @Get(':id')
@@ -37,7 +38,13 @@ export class UserController {
   @Put()
   update(@Body() updateUserDto: UpdateUserDto, @Request() request) {
     const { user } = request;
-    return this.userService.update(user.id, updateUserDto);
+    let id = -1;
+    if (updateUserDto.id !== undefined) {
+      id = updateUserDto.id;
+    } else {
+      id = user.id;
+    }
+    return this.userService.update(id, updateUserDto);
   }
 
   @Delete(':id')

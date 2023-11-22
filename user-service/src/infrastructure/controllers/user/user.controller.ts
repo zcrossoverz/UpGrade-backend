@@ -12,6 +12,7 @@ import { UserPresenter } from './user.presenter';
 import { CreateUserDto } from './user.dto';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { UserM } from 'src/domain/model/user';
+import { IfilterSearch } from 'src/domain/common/filter';
 
 @Controller('user')
 export class UserController {
@@ -41,9 +42,11 @@ export class UserController {
     prefix: 'user',
     action: 'get-list-user',
   })
-  async getAllUser() {
-    const users = await this.getUsersUsecasesProxy.getInstance().execute();
-    return users.map((user) => new UserPresenter(user));
+  async getAllUser(@Payload() payload: { filter: IfilterSearch }) {
+    const users = await this.getUsersUsecasesProxy
+      .getInstance()
+      .execute(payload.filter);
+    return users;
   }
 
   @MessagePattern({

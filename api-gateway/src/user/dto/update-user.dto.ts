@@ -7,4 +7,6 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   password?: string;
   bio?: string;
   email?: string;
+  id?: number;
+  isActive?: boolean;
 }

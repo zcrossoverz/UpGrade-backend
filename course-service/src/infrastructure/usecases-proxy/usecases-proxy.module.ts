@@ -289,6 +289,7 @@ export class UsecasesProxyModule {
     // topics
     {
       provide: UsecasesProxyModule.CREATE_TOPIC_USECASES_PROXY,
+
       useFactory: (logger: LoggerService, topicRepository: TopicRepository) =>
         new UseCaseProxy(new CreateTopicUseCase(logger, topicRepository)),
       inject: [LoggerService, TopicRepository],

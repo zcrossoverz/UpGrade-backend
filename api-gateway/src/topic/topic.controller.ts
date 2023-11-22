@@ -7,6 +7,7 @@ import {
   UseGuards,
   UploadedFiles,
   UseInterceptors,
+  Request,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/common/guards/auth';
 import { TopicService } from './topic.service';
@@ -53,9 +54,11 @@ export class TopicController {
     return this.topicService.delete(id);
   }
 
+  @UseGuards(AuthGuard)
   @Post('/get/:id')
-  getOne(@Param('id') id: number) {
-    return this.topicService.getOne(id);
+  getOne(@Param('id') id: number, @Request() request) {
+    const { user } = request;
+    return this.topicService.getOne(id, user.id);
   }
 
   @Post('/get-list-topic')

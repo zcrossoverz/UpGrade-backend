@@ -7,6 +7,8 @@ export class LibraryM {
 
   courses: CourseProgressM[];
 
+  count: number;
+
   created_at: Date;
 
   updated_at: Date;

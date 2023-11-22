@@ -3,6 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ClientProxy } from '@nestjs/microservices/client';
 import { MESSAGE_PATTERNS_USER } from './messagePattern';
+import { IfilterSearch } from 'src/common/interface/filterSearch';
 
 @Injectable()
 export class UserService {
@@ -12,8 +13,8 @@ export class UserService {
     return this.client.send(MESSAGE_PATTERNS_USER.create, createUserDto);
   }
 
-  getList() {
-    return this.client.send(MESSAGE_PATTERNS_USER.getList, {});
+  getList(filter: IfilterSearch) {
+    return this.client.send(MESSAGE_PATTERNS_USER.getList, { filter });
   }
 
   findOne(id: number) {

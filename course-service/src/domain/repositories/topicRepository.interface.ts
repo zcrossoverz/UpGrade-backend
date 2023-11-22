@@ -9,7 +9,7 @@ export interface ITopicRepository {
     duration: number,
     file_id: string,
   ): Promise<TopicM>;
-  getTopic(topic_id: number): Promise<TopicM>;
+  getTopic(topic_id: number, user_id: number): Promise<TopicM>;
   getListTopic(unit_id: number): Promise<{
     datas: TopicM[];
     count: number;
