@@ -10,6 +10,7 @@ import { DeleteCategoryUseCases } from 'src/usecases/category/deleteCategory';
 import { GetListCategoryUseCases } from 'src/usecases/category/getListCategory';
 import { CATEGORY_MESSAGE_PATTERNS } from './messagePattern';
 import { CreateCategoryDto, UpdateCategoryDto } from './category.dto';
+import { AnalystCategoryUseCases } from 'src/usecases/category/analytic';
 
 @Controller('category')
 export class CategoryController {
@@ -22,6 +23,8 @@ export class CategoryController {
     private readonly deleteUsecase: UseCaseProxy<DeleteCategoryUseCases>,
     @Inject(UsecasesProxyModule.GET_LIST_CATEGORY_USECASES_PROXY)
     private readonly getListUsecase: UseCaseProxy<GetListCategoryUseCases>,
+    @Inject(UsecasesProxyModule.GET_ANALIST_CATEGORY_USECASES_PROXY)
+    private readonly getAnalyst: UseCaseProxy<AnalystCategoryUseCases>,
   ) {}
 
   @MessagePattern(CATEGORY_MESSAGE_PATTERNS.create)
@@ -49,8 +52,14 @@ export class CategoryController {
   }
 
   @MessagePattern(CATEGORY_MESSAGE_PATTERNS.delete)
-  async uploadVideo(@Payload('id', ParseIntPipe) id: number) {
+  async deleteCategory(@Payload('id', ParseIntPipe) id: number) {
     const result = await this.deleteUsecase.getInstance().excute(id);
+    return result;
+  }
+
+  @MessagePattern(CATEGORY_MESSAGE_PATTERNS.analyst)
+  async analyst() {
+    const result = await this.getAnalyst.getInstance().excute();
     return result;
   }
 }

@@ -29,4 +29,8 @@ export class CategoryService {
   async delete(id: number) {
     return this.client.send(CATEGORY_MESSAGE_PATTERNS.delete, { id });
   }
+
+  async analyst() {
+    return this.client.send(CATEGORY_MESSAGE_PATTERNS.analyst, {});
+  }
 }

@@ -42,4 +42,17 @@ export class CategoryRepository implements ICategoryRepository {
       count,
     };
   }
+  async analyst(): Promise<any> {
+    const data = await this.categoryRepository.find({
+      relations: {
+        course: true,
+      },
+    });
+    return data.map((e) => {
+      return {
+        name: e.name,
+        count: e.course.length,
+      };
+    });
+  }
 }

@@ -26,6 +26,11 @@ export class CategoryController {
     );
   }
 
+  @Post('/analyst')
+  analyst() {
+    return this.categoryService.analyst();
+  }
+
   @Post('/delete/:id')
   delete(@Param('id') id: number) {
     return this.categoryService.delete(id);

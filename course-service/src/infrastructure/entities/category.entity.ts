@@ -20,7 +20,7 @@ export class Category {
   description: string;
 
   @OneToMany(() => Course, (course) => course.category)
-  course: Course;
+  course: Course[];
 
   @CreateDateColumn()
   created_at: Date;

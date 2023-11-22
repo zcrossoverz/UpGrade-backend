@@ -15,4 +15,8 @@ export const CATEGORY_MESSAGE_PATTERNS = {
     prefix: 'category',
     action: 'delete',
   },
+  analyst: {
+    prefix: 'category',
+    action: 'analyst',
+  },
 };

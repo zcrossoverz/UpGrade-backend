@@ -54,6 +54,7 @@ import { UpdateCommentUseCase } from 'src/usecases/comment/update';
 import { GetListCommentUseCase } from 'src/usecases/comment/getList';
 import { DeleteCommentUseCase } from 'src/usecases/comment/delete';
 import { ReactCommentUseCase } from 'src/usecases/comment/react';
+import { AnalystCategoryUseCases } from 'src/usecases/category/analytic';
 
 export class UseCaseProxy<T> {
   constructor(private readonly useCase: T) {}
@@ -82,6 +83,8 @@ export class UsecasesProxyModule {
   static CREATE_CATEGORY_USECASES_PROXY = 'postCategoryUsecasesProxy';
   static DELETE_CATEGORY_USECASES_PROXY = 'deleteCategoryUsecasesProxy';
   static UPDATE_CATEGORY_USER_USECASES_PROXY = 'putCategoryUsecasesProxy';
+  static GET_ANALIST_CATEGORY_USECASES_PROXY =
+    'getAnalistCategoryUsecasesProxy';
 
   // units
   static CREATE_UNIT_USECASES_PROXY = 'createUnitUsecasesProxy';
@@ -262,6 +265,17 @@ export class UsecasesProxyModule {
       ) =>
         new UseCaseProxy(
           new GetListCategoryUseCases(logger, categoryRepository),
+        ),
+      inject: [LoggerService, CategoryRepository],
+    },
+    {
+      provide: UsecasesProxyModule.GET_ANALIST_CATEGORY_USECASES_PROXY,
+      useFactory: (
+        logger: LoggerService,
+        categoryRepository: CategoryRepository,
+      ) =>
+        new UseCaseProxy(
+          new AnalystCategoryUseCases(logger, categoryRepository),
         ),
       inject: [LoggerService, CategoryRepository],
     },

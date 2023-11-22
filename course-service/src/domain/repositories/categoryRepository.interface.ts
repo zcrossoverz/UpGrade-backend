@@ -5,4 +5,5 @@ export interface ICategoryRepository {
   update(id: number, name: string, description: string): Promise<boolean>;
   delete(id: number): Promise<boolean>;
   getList(): Promise<{ datas: CategoryM[]; count: number }>;
+  analyst(): Promise<any>;
 }
