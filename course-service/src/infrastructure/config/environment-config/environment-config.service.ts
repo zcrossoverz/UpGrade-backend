@@ -5,6 +5,9 @@ import { AppConfig } from 'src/domain/config/database.interface';
 @Injectable()
 export class EnvironmentConfigService implements AppConfig {
   constructor(private configService: ConfigService) {}
+  getChatGptApiKey(): string {
+    return this.configService.get<string>('OPENAI_API');
+  }
   getDriveClientId(): string {
     return this.configService.get<string>('GDRIVE_CLIENT_ID');
   }

@@ -29,7 +29,7 @@ export class NotificationRepository implements INotificationRepository {
     text: string,
     href: string,
   ): Promise<NotificationM> {
-    if (!user_id || !text || !href) {
+    if (!user_id || !text) {
       throw new RpcException(
         new BadRequestException('user id, text, href is required'),
       );

@@ -17,7 +17,7 @@ export class Notification {
   @Column()
   href: string;
 
-  @Column()
+  @Column({ default: false })
   isRead: boolean;
 
   @Column()

@@ -13,4 +13,6 @@ export interface AppConfig {
   getDriveMainFolderId(): string;
   getDriveAccessToken(): string;
   getDriveRefreshToken(): string;
+
+  getChatGptApiKey(): string;
 }

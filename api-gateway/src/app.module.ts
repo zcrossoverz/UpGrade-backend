@@ -15,6 +15,7 @@ import { NotificationModule } from './notification/notification.module';
 import { ReviewModule } from './review/review.module';
 import { NoteModule } from './note/note.module';
 import { CommentModule } from './comment/comment.module';
+import { AnalysticModule } from './analytics/analytics.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { CommentModule } from './comment/comment.module';
     ReviewModule,
     NoteModule,
     CommentModule,
+    AnalysticModule,
     ConfigModule.forRoot({
       load: [configuration],
     }),

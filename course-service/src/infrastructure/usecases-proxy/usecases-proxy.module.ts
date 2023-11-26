@@ -55,6 +55,10 @@ import { GetListCommentUseCase } from 'src/usecases/comment/getList';
 import { DeleteCommentUseCase } from 'src/usecases/comment/delete';
 import { ReactCommentUseCase } from 'src/usecases/comment/react';
 import { AnalystCategoryUseCases } from 'src/usecases/category/analytic';
+import { ChatGpt } from '../libs/chatgpt/chatgpt';
+import { ChatGptModule } from '../libs/chatgpt/chatgpt.module';
+import { AnalyticRepository } from '../repositories/analytics.repository';
+import { GetOverviewAnalystic } from 'src/usecases/analytics/courseAnalystic';
 
 export class UseCaseProxy<T> {
   constructor(private readonly useCase: T) {}
@@ -64,7 +68,13 @@ export class UseCaseProxy<T> {
 }
 
 @Module({
-  imports: [LoggerModule, RepositoriesModule, ExceptionsModule, GdriveModule],
+  imports: [
+    LoggerModule,
+    RepositoriesModule,
+    ExceptionsModule,
+    GdriveModule,
+    ChatGptModule,
+  ],
 })
 export class UsecasesProxyModule {
   // course
@@ -131,6 +141,9 @@ export class UsecasesProxyModule {
   static GETLIST_COMMENT_USECASES_PROXY = 'getListCommentUsecasesProxy';
   static REACT_COMMENT_USECASES_PROXY = 'reactCommentUsecasesProxy';
   static DELETE_COMMENT_USECASES_PROXY = 'deleteCommentUsecasesProxy';
+
+  // analytics
+  static GET_OVERVIEW_ANALYTICS_USECASES_PROXY = 'getAnalyticsUsecasesProxy';
 
   static USE_CASE_PROXY_MAP: {
     provide: string;
@@ -348,8 +361,14 @@ export class UsecasesProxyModule {
       useFactory: (
         logger: LoggerService,
         repository: ApprovalRequestRepository,
-      ) => new UseCaseProxy(new ProcessApprovalUseCases(logger, repository)),
-      inject: [LoggerService, ApprovalRequestRepository],
+        noti: NotificationRepository,
+      ) =>
+        new UseCaseProxy(new ProcessApprovalUseCases(logger, repository, noti)),
+      inject: [
+        LoggerService,
+        ApprovalRequestRepository,
+        NotificationRepository,
+      ],
     },
     {
       provide: UsecasesProxyModule.GET_LIST_APPROVAL_REQUEST_USECASES_PROXY,
@@ -424,9 +443,13 @@ export class UsecasesProxyModule {
     // comment
     {
       provide: UsecasesProxyModule.CREATE_COMMENT_USECASES_PROXY,
-      useFactory: (logger: LoggerService, repository: CommentRepository) =>
-        new UseCaseProxy(new CreateCommentUseCase(logger, repository)),
-      inject: [LoggerService, CommentRepository],
+      useFactory: (
+        logger: LoggerService,
+        repository: CommentRepository,
+        chatGpt: ChatGpt,
+      ) =>
+        new UseCaseProxy(new CreateCommentUseCase(logger, repository, chatGpt)),
+      inject: [LoggerService, CommentRepository, ChatGpt],
     },
     {
       provide: UsecasesProxyModule.UPDATE_COMMENT_USECASES_PROXY,
@@ -451,6 +474,14 @@ export class UsecasesProxyModule {
       useFactory: (logger: LoggerService, repository: CommentRepository) =>
         new UseCaseProxy(new ReactCommentUseCase(logger, repository)),
       inject: [LoggerService, CommentRepository],
+    },
+
+    // analytics
+    {
+      provide: UsecasesProxyModule.GET_OVERVIEW_ANALYTICS_USECASES_PROXY,
+      useFactory: (logger: LoggerService, repository: AnalyticRepository) =>
+        new UseCaseProxy(new GetOverviewAnalystic(logger, repository)),
+      inject: [LoggerService, AnalyticRepository],
     },
   ];
 

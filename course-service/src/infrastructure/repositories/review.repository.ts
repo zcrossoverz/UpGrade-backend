@@ -7,6 +7,7 @@ import { IReviewRepository } from 'src/domain/repositories/reviewRepository.inte
 import { ReviewM } from 'src/domain/model/review';
 import { Review } from '../entities/review.entity';
 import { Course } from '../entities/course.entity';
+import { Notification } from '../entities/notification.entity';
 
 @Injectable()
 export class ReviewRepository implements IReviewRepository {
@@ -15,6 +16,8 @@ export class ReviewRepository implements IReviewRepository {
     private readonly repository: Repository<Review>,
     @InjectRepository(Course)
     private readonly courseRepository: Repository<Course>,
+    @InjectRepository(Notification)
+    private readonly notiRepository: Repository<Notification>,
   ) {}
 
   async create(
@@ -73,6 +76,14 @@ export class ReviewRepository implements IReviewRepository {
     course.rate = newRate;
     course.rate_number = count;
     this.courseRepository.save(course);
+
+    this.notiRepository.save(
+      this.notiRepository.create({
+        user_id: course.instructor_id,
+        text: `${user_fullname} vừa đánh giá ${rate} sao cho khóa học của bạn! Xem ngay!`,
+        href: `/admin/course-management/details/${course.id}`,
+      }),
+    );
 
     return result;
   }
