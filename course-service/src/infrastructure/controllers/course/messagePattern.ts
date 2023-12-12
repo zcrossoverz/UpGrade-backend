@@ -35,4 +35,8 @@ export const COURSE_MESSAGE_PATTERNS = {
     prefix: 'course',
     action: 'get-library',
   },
+  getRecommend: {
+    prefix: 'course',
+    action: 'get-recommend',
+  },
 };

@@ -148,4 +148,10 @@ export class CourseService {
       user_id,
     });
   }
+
+  getRecommend(user_id: number) {
+    return this.client.send(COURSE_MESSAGE_PATTERNS.getRecommend, {
+      user_id,
+    });
+  }
 }

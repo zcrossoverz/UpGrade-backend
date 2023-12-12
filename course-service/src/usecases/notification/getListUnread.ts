@@ -28,6 +28,10 @@ export class GetUnreadNotiListUseCases {
           value: false,
         },
       ],
+      order: {
+        key: 'id',
+        value: 'DESC',
+      },
     });
 
     return result;

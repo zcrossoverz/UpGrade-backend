@@ -42,7 +42,12 @@ export class CreateCommentUseCase {
       text,
       parent_id,
     );
-    this.logger.log('sdf', '' + parent_id);
+
+    const classification = await this.chatGpt.classification(text);
+
+    if (classification.flagged) {
+      throw new RpcException(new BadRequestException(classification.message));
+    }
 
     if (text.includes('@bot')) {
       const reply = await this.chatGpt.generateMessage(text);

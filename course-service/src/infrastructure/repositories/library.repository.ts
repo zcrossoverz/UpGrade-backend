@@ -127,6 +127,11 @@ export class LibraryRepository implements ILibraryRepository {
           topicCompleted: true,
         },
       },
+      order: {
+        courses: {
+          updated_at: 'DESC',
+        },
+      },
     });
     return { ...result, count: result.courses.length };
   }

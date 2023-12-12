@@ -7,6 +7,7 @@ import { Topic } from '../entities/topic.entity';
 import { IfilterSearch } from 'src/domain/constant/constant';
 import { CommentM } from 'src/domain/model/comment';
 import { RpcException } from '@nestjs/microservices';
+import { Notification } from '../entities/notification.entity';
 
 @Injectable()
 export class CommentRepository implements ICommentRepository {
@@ -15,6 +16,8 @@ export class CommentRepository implements ICommentRepository {
     private readonly repository: Repository<Comment>,
     @InjectRepository(Topic)
     private readonly topicRepository: Repository<Topic>,
+    @InjectRepository(Notification)
+    private readonly notiRepository: Repository<Notification>,
   ) {}
   async create(
     topic_id: number,
@@ -43,10 +46,41 @@ export class CommentRepository implements ICommentRepository {
       where: {
         id: topic_id,
       },
+      relations: {
+        unit: {
+          course: true,
+        },
+      },
     });
 
     if (!topic) {
       throw new RpcException(new BadRequestException('topic not found'));
+    }
+
+    if (user_id !== topic.unit.course.instructor_id) {
+      this.notiRepository.save(
+        this.notiRepository.create({
+          user_id: topic.unit.course.instructor_id,
+          text: `${user_fullname} đã bình luận về bài học ${topic.title}`,
+          href: `/learning/${topic.unit.course.id}/${topic.id}`,
+        }),
+      );
+    }
+
+    if (parent_id) {
+      const parent = await this.repository.findOne({
+        where: {
+          id: parent_id,
+        },
+      });
+
+      this.notiRepository.save(
+        this.notiRepository.create({
+          user_id: parent.user_id,
+          text: `${user_fullname} đã trả lời bình luận của bạn trong bài học ${topic.title}`,
+          href: `/learning/${topic.unit.course.id}/${topic.id}`,
+        }),
+      );
     }
 
     const result = await this.repository.save(
@@ -70,20 +104,6 @@ export class CommentRepository implements ICommentRepository {
           : {}),
       }),
     );
-
-    if (parent_id) {
-      const parent = await this.repository.findOne({
-        where: {
-          id: parent_id,
-        },
-      });
-
-      if (parent) {
-        parent.children = parent.children || [];
-        parent.children.push(result);
-        this.repository.save(parent);
-      }
-    }
 
     return result;
   }

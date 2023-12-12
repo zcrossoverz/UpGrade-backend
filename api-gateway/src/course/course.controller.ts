@@ -152,4 +152,11 @@ export class CourseController {
     const { user } = request;
     return this.courseService.getLibrary(user.id);
   }
+
+  @Post('/get-recommend')
+  @UseGuards(AuthGuard)
+  getRecommendCourse(@Request() request) {
+    const { user } = request;
+    return this.courseService.getRecommend(user.id);
+  }
 }

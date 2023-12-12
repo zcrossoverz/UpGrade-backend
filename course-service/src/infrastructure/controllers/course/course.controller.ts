@@ -15,6 +15,7 @@ import { DeleteCourseUseCase } from 'src/usecases/course/deleteCourse';
 import { UpdateCoursesUseCase } from 'src/usecases/course/updateCourse';
 import { EnrollCourseUseCase } from 'src/usecases/course/enroll';
 import { GetLibraryUseCase } from 'src/usecases/course/getLibrary.usecases';
+import { GetRecommendCourseUseCase } from 'src/usecases/course/getRecommendCourse.usecases';
 
 @Controller('course')
 export class CourseController {
@@ -37,6 +38,8 @@ export class CourseController {
     private readonly enrollCoursesUsecaseProxy: UseCaseProxy<EnrollCourseUseCase>,
     @Inject(UsecasesProxyModule.GET_LIBRARY_USECASES_PROXY)
     private readonly getLibraryUsecasesProxy: UseCaseProxy<GetLibraryUseCase>,
+    @Inject(UsecasesProxyModule.GET_RECOMMEND_COURSES_USECASES_PROXY)
+    private readonly getRecommend: UseCaseProxy<GetRecommendCourseUseCase>,
   ) {}
 
   @MessagePattern(COURSE_MESSAGE_PATTERNS.create)
@@ -139,6 +142,17 @@ export class CourseController {
     const result = await this.getLibraryUsecasesProxy
       .getInstance()
       .excute(data.user_id);
+    return result;
+  }
+
+  @MessagePattern(COURSE_MESSAGE_PATTERNS.getRecommend)
+  async getRecommendCourse(
+    @Payload()
+    data: {
+      user_id: number;
+    },
+  ) {
+    const result = await this.getRecommend.getInstance().excute(data.user_id);
     return result;
   }
 }

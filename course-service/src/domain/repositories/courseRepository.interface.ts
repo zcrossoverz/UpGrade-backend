@@ -19,4 +19,5 @@ export interface ICourseRepository {
   ): Promise<{ datas: CourseM[]; count: number }>;
   delete(id: number): Promise<boolean>;
   update(course_id: number, data: any): Promise<boolean>;
+  getListRecommend(user_id: number): Promise<any>;
 }

@@ -182,7 +182,7 @@ export class GDrive {
 
   async getCredentials(): Promise<any> {
     const code =
-      '4/0AfJohXl-hOLiy4WSNt62E-rmBzYNviXNUphAiuCdBeXVS7uhvuYwqdOreULqBZI--a13QA';
+      '4/0AfJohXmikpPc5Si25MaywFEfukc1Mkgbl-bSyBU8ul_Vx22fwzE0xJHUsZaSsudI_piT_Q';
 
     const { tokens } = await this.oauth2Client.getToken(code);
     this.oauth2Client.setCredentials(tokens);

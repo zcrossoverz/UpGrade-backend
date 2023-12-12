@@ -110,17 +110,21 @@ export class CourseRepository implements ICourseRepository {
       });
     }
 
-    const [datas, count] = await this.courseRepository.findAndCount({
-      where,
-      ...(order ? { order: { [order.key]: order.value } } : {}),
-      take: limit,
-      skip: offset,
-    });
-
-    return {
-      datas,
-      count,
-    };
+    try {
+      const [datas, count] = await this.courseRepository.findAndCount({
+        where,
+        ...(order ? { order: { [order.key]: order.value } } : {}),
+        take: limit,
+        skip: offset,
+      });
+      return {
+        datas,
+        count,
+      };
+    } catch (error) {
+      console.log(error);
+      throw new RpcException(new BadRequestException('course not found'));
+    }
   }
 
   async getListByKey(
@@ -134,5 +138,85 @@ export class CourseRepository implements ICourseRepository {
       datas,
       count,
     };
+  }
+  async getListRecommend(user_id: number): Promise<any> {
+    const courses = await this.courseRepository.find({
+      relations: {
+        reviews: true,
+      },
+    });
+    const enrollments = [];
+
+    courses.forEach((e) => {
+      e.members_id?.forEach((member_id) => {
+        const enrollment = {
+          user_id: Number(member_id),
+          course_id: e.id,
+          rate: null,
+        };
+        const userReview = e.reviews?.find(
+          (review) => review.reviewer_id === enrollment.user_id,
+        );
+        if (userReview) {
+          enrollment.rate = userReview.rate;
+        }
+        enrollments.push(enrollment);
+      });
+    });
+
+    const userEnrollments = enrollments.filter(
+      (enrollment) => enrollment.user_id === user_id,
+    );
+    const userCourses = userEnrollments.map(
+      (enrollment) => enrollment.course_id,
+    );
+
+    const recommendations = [];
+
+    for (const course of courses) {
+      if (!userCourses.includes(course.id)) {
+        const ratingsForCourse = enrollments
+          .filter(
+            (enrollment) =>
+              enrollment.course_id === course.id && enrollment.rate !== null,
+          )
+          .map((enrollment) => enrollment.rate);
+
+        if (ratingsForCourse.length > 0) {
+          const averageRating =
+            ratingsForCourse.reduce((sum, rating) => sum + rating, 0) /
+            ratingsForCourse.length;
+          recommendations.push({
+            ...course,
+            averageRating,
+          });
+        } else {
+          // If no non-null ratings, add the course with a lower priority
+          recommendations.push({
+            ...course,
+            averageRating: null,
+          });
+        }
+      }
+    }
+
+    // Sort recommendations by average rating (descending order)
+    recommendations.sort((a, b) => {
+      // If both have null ratings, maintain the original order
+      if (a.averageRating === null && b.averageRating === null) {
+        return 0;
+      }
+      // If one has a null rating, prioritize the one with a non-null rating
+      if (a.averageRating === null) {
+        return 1;
+      }
+      if (b.averageRating === null) {
+        return -1;
+      }
+      // Sort by average rating in descending order
+      return b.averageRating - a.averageRating;
+    });
+
+    return recommendations;
   }
 }

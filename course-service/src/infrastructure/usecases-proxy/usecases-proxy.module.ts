@@ -59,6 +59,7 @@ import { ChatGpt } from '../libs/chatgpt/chatgpt';
 import { ChatGptModule } from '../libs/chatgpt/chatgpt.module';
 import { AnalyticRepository } from '../repositories/analytics.repository';
 import { GetOverviewAnalystic } from 'src/usecases/analytics/courseAnalystic';
+import { GetRecommendCourseUseCase } from 'src/usecases/course/getRecommendCourse.usecases';
 
 export class UseCaseProxy<T> {
   constructor(private readonly useCase: T) {}
@@ -87,6 +88,8 @@ export class UsecasesProxyModule {
   static GET_MY_COURSES_USECASES_PROXY = 'getMyCourseUsecasesProxy';
   static ENROLL_COURSES_USECASES_PROXY = 'enrollCourseUsecasesProxy';
   static GET_LIBRARY_USECASES_PROXY = 'getLibraryUsecasesProxy';
+  static GET_RECOMMEND_COURSES_USECASES_PROXY =
+    'getRecommendCourseUsecasesProxy';
 
   // category
   static GET_LIST_CATEGORY_USECASES_PROXY = 'getListCategoryUsecasesProxy';
@@ -187,6 +190,14 @@ export class UsecasesProxyModule {
       provide: UsecasesProxyModule.GET_MY_COURSES_USECASES_PROXY,
       useFactory: (logger: LoggerService, courseRepository: CourseRepository) =>
         new UseCaseProxy(new GetMyCoursesUseCase(logger, courseRepository)),
+      inject: [LoggerService, CourseRepository],
+    },
+    {
+      provide: UsecasesProxyModule.GET_RECOMMEND_COURSES_USECASES_PROXY,
+      useFactory: (logger: LoggerService, courseRepository: CourseRepository) =>
+        new UseCaseProxy(
+          new GetRecommendCourseUseCase(logger, courseRepository),
+        ),
       inject: [LoggerService, CourseRepository],
     },
     {

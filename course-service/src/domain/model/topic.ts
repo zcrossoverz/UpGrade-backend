@@ -8,7 +8,7 @@ export enum typeTopic {
 }
 
 export enum typeStatusTopic {
-  PUBLISHED = 'published',
+  PUBLISHED = 'public',
   PRIVATE = 'private',
   BLOCK = 'block',
 }

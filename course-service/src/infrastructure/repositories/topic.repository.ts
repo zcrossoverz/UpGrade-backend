@@ -7,6 +7,7 @@ import { ITopicRepository } from 'src/domain/repositories/topicRepository.interf
 import { Topic } from '../entities/topic.entity';
 import { TopicM, typeStatusTopic } from 'src/domain/model/topic';
 import { CourseProgress } from '../entities/courseProgress.entity';
+import { Notification } from '../entities/notification.entity';
 
 @Injectable()
 export class TopicRepository implements ITopicRepository {
@@ -17,6 +18,8 @@ export class TopicRepository implements ITopicRepository {
     private readonly topicRepository: Repository<Topic>,
     @InjectRepository(CourseProgress)
     private readonly progressRepository: Repository<CourseProgress>,
+    @InjectRepository(Notification)
+    private readonly notiRepository: Repository<Notification>,
   ) {}
   async create(
     title: string,
@@ -75,8 +78,10 @@ export class TopicRepository implements ITopicRepository {
         user_id,
       },
     });
-    progress.currentTopic = result;
-    this.progressRepository.save(progress);
+    if (progress) {
+      progress.currentTopic = result;
+      this.progressRepository.save(progress);
+    }
     return result;
   }
   async getListTopic(
@@ -113,6 +118,40 @@ export class TopicRepository implements ITopicRepository {
     description: string,
     status: typeStatusTopic,
   ): Promise<boolean> {
+    console.log(status);
+
+    if (status === typeStatusTopic.PUBLISHED) {
+      const topic = await this.topicRepository.findOne({
+        where: {
+          id,
+        },
+        relations: {
+          unit: {
+            course: true,
+          },
+        },
+      });
+
+      const course = topic.unit.course;
+      const listEnroll = course.members_id;
+
+      console.log(listEnroll);
+
+      if (listEnroll) {
+        await Promise.all(
+          listEnroll.map(async (e) => {
+            await this.notiRepository.save(
+              this.notiRepository.create({
+                user_id: e,
+                text: `Khóa học ${course.title} đã có bài học mới! Vào xem ngay nào!`,
+                href: `/course-details/${course.id}`,
+              }),
+            );
+          }),
+        );
+      }
+    }
+
     const result = await this.topicRepository.update(
       {
         id,

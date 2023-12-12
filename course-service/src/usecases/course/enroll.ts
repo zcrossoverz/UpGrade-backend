@@ -28,11 +28,6 @@ export class EnrollCourseUseCase {
     const course = await this.repository.getCourse(course_id);
     if (!course)
       throw new RpcException(new BadGatewayException('course not found'));
-    if (course.price > 0) {
-      throw new RpcException(
-        new BadGatewayException('this course cannot enroll'),
-      );
-    }
 
     const courseProgress = await this.courseProgressRepository.create(
       user_id,
@@ -43,13 +38,13 @@ export class EnrollCourseUseCase {
     this.notificationRepository.create(
       course.instructor_id,
       `Người dùng ${user_fullname} vừa đăng ký khóa học của bạn!`,
-      'test',
+      `/course-details/${course.id}`,
     );
 
     this.notificationRepository.create(
       user_id,
       `Chúc mừng! bạn đã đăng ký khóa học ${course.title} thành công!!`,
-      'test',
+      `/my-library`,
     );
 
     const { members_id, members_count } = course;

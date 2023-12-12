@@ -16,6 +16,7 @@ import { ReviewModule } from './review/review.module';
 import { NoteModule } from './note/note.module';
 import { CommentModule } from './comment/comment.module';
 import { AnalysticModule } from './analytics/analytics.module';
+import { ProxyModule } from './proxy/proxy.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { AnalysticModule } from './analytics/analytics.module';
     NoteModule,
     CommentModule,
     AnalysticModule,
+    ProxyModule,
     ConfigModule.forRoot({
       load: [configuration],
     }),
